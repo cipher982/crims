@@ -84,6 +84,7 @@ uv run python scripts/build_public_event_spine.py --year 2024
 uv run python scripts/build_arrest_research_dataset_polars.py --year 2024
 uv run python scripts/build_public_event_spine_polars.py --year 2024
 uv run python scripts/build_public_event_spine_census_geo.py --year 2024
+uv run python scripts/build_public_event_panel.py --start-year 2020 --end-year 2024
 ```
 
 `download_complaints_subset.py` now supports either a single `--year` or a `--start-year/--end-year` range.
@@ -110,8 +111,10 @@ These generated data files are local artifacts and are intentionally ignored by 
 
 ## Current Best Processed Datasets
 
+- `data/derived/public_event_panel_2020_2024_census_geo.parquet`
+  - current canonical five-year public panel with Census geography attached where coordinates exist
 - `data/derived/public_event_spine_2024_census_geo.parquet`
-  - canonical columnar event spine with Census geography attached where public coordinates exist
+  - canonical single-year event spine with Census geography attached where public coordinates exist
 - `data/derived/public_event_spine_2024.parquet`
   - pre-geography canonical columnar version of the unified 2024 event spine
 - `data/derived/public_event_spine_2024.csv`
@@ -127,7 +130,8 @@ These generated data files are local artifacts and are intentionally ignored by 
 
 ## Current Success Criteria
 
-- keep `public_event_spine_2024_census_geo.parquet` as the canonical singular tidy dataset
+- keep `public_event_panel_2020_2024_census_geo.parquet` as the current canonical singular tidy dataset
+- keep yearly `public_event_spine_<year>_census_geo.parquet` files as the reproducible building blocks
 - keep `public_event_spine_2024.parquet` as the clean pre-geography staging layer
 - keep `public_event_spine_2024.csv` as a convenience export when helpful
 - enrich rows with stable geography like census tract / block group where public coordinates exist

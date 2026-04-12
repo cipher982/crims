@@ -20,6 +20,7 @@
 | Run exploration file | `uv run python scripts/public_mvp.py` |
 | Build canonical event spine | `uv run python scripts/build_public_event_spine_polars.py --year 2024` |
 | Enrich spine with Census geographies | `uv run python scripts/build_public_event_spine_census_geo.py --year 2024` |
+| Build multi-year panel | `uv run python scripts/build_public_event_panel.py --start-year 2020 --end-year 2024` |
 | Run a one-off Python check | `uv run python -c "..."` |
 | List raw data | `find data -maxdepth 2 -type f | sort` |
 
@@ -48,7 +49,7 @@ Prefer notebook-style exploration over early pipeline design.
 Current strong outcome:
 
 - keep one singular tidy yearly event-spine dataset as the main research table
-- prefer the census-enriched Parquet spine as the active canonical output when it exists
+- prefer the census-enriched panel Parquet as the active canonical output when it exists
 - make Parquet the canonical processed format and CSV exports optional convenience artifacts
 - keep exact joins, candidate joins, and unsupported joins clearly labeled
 - enrich event rows with stable public geography such as tract and block group where coordinates exist
