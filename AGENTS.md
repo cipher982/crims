@@ -20,7 +20,8 @@
 | Run exploration file | `uv run python scripts/public_mvp.py` |
 | Build canonical event spine | `uv run python scripts/build_public_event_spine_polars.py --year 2024` |
 | Enrich spine with Census geographies | `uv run python scripts/build_public_event_spine_census_geo.py --year 2024` |
-| Build multi-year panel | `uv run python scripts/build_public_event_panel.py --start-year 2020 --end-year 2024` |
+| Build multi-year panel | `uv run python scripts/build_public_event_panel.py --start-year 2018 --end-year 2024` |
+| Profile panel | `uv run python scripts/profile_public_event_panel.py --path data/derived/public_event_panel_2018_2024_census_geo.parquet` |
 | Run a one-off Python check | `uv run python -c "..."` |
 | List raw data | `find data -maxdepth 2 -type f | sort` |
 
@@ -53,6 +54,7 @@ Current strong outcome:
 - make Parquet the canonical processed format and CSV exports optional convenience artifacts
 - keep exact joins, candidate joins, and unsupported joins clearly labeled
 - enrich event rows with stable public geography such as tract and block group where coordinates exist
+- keep one compact machine-readable profile for the active panel so quality and coverage can be checked quickly
 - preserve raw source files locally and keep them out of git
 - keep repo docs and scripts concise enough to stay inspectable
 
