@@ -76,6 +76,7 @@ The point is not to pretend this is ground truth. The point is to quantify how n
 uv run python scripts/public_mvp.py
 uv run python scripts/download_public_data.py <optional-slugs>
 uv run python scripts/download_complaints_subset.py --year 2024
+uv run python scripts/download_complaints_subset.py --start-year 2023 --end-year 2024
 uv run python scripts/build_doc_episode_dataset.py
 uv run python scripts/build_doc_daily_custody_enriched.py
 uv run python scripts/build_arrest_research_dataset.py --year 2024
@@ -84,6 +85,8 @@ uv run python scripts/build_arrest_research_dataset_polars.py --year 2024
 uv run python scripts/build_public_event_spine_polars.py --year 2024
 uv run python scripts/build_public_event_spine_census_geo.py --year 2024
 ```
+
+`download_complaints_subset.py` now supports either a single `--year` or a `--start-year/--end-year` range.
 
 Open the file in VS Code or another editor that supports `# %%` cells if you want a notebook-like flow.
 

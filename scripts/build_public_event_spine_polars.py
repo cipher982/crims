@@ -82,12 +82,17 @@ FIELD_ORDER = [
     "LINK_STATUS",
 ]
 
+FINAL_SCHEMA = {field: pl.Utf8 for field in FIELD_ORDER}
+
 
 def ensure_columns(lf: pl.LazyFrame) -> pl.LazyFrame:
-    missing = [col for col in FIELD_ORDER if col not in lf.collect_schema().names()]
-    if missing:
-        lf = lf.with_columns([pl.lit(None).alias(col) for col in missing])
-    return lf.select(FIELD_ORDER)
+    return (
+        lf.match_to_schema(
+            FINAL_SCHEMA,
+            missing_columns="insert",
+            extra_columns="ignore",
+        ).select(FIELD_ORDER)
+    )
 
 
 def main() -> None:

@@ -41,18 +41,13 @@ def fetch_rows(where: str, offset: int, limit: int) -> list[dict[str, str]]:
         return json.load(response)
 
 
-def main() -> None:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--year", type=int, required=True)
-    parser.add_argument("--limit", type=int, default=50000)
-    args = parser.parse_args()
-
-    out = Path(f"data/raw/nypd_complaints_{args.year}_minimal.csv")
+def download_year(year: int, limit: int) -> dict[str, object]:
+    out = Path(f"data/raw/nypd_complaints_{year}_minimal.csv")
     out.parent.mkdir(parents=True, exist_ok=True)
 
     where = (
-        f'cmplnt_fr_dt between "{args.year}-01-01T00:00:00.000" '
-        f'and "{args.year}-12-31T23:59:59.999"'
+        f'cmplnt_fr_dt between "{year}-01-01T00:00:00.000" '
+        f'and "{year}-12-31T23:59:59.999"'
     )
 
     offset = 0
@@ -62,16 +57,40 @@ def main() -> None:
         writer.writeheader()
 
         while True:
-            rows = fetch_rows(where, offset=offset, limit=args.limit)
+            rows = fetch_rows(where, offset=offset, limit=limit)
             if not rows:
                 break
             for row in rows:
                 writer.writerow({field: row.get(field, "") for field in FIELDS})
             total += len(rows)
             offset += len(rows)
-            print(f"rows_written {total}", flush=True)
+            print(f"year={year} rows_written {total}", flush=True)
 
-    print(json.dumps({"output": str(out), "rows_written": total}, indent=2))
+    return {"year": year, "output": str(out), "rows_written": total}
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--year", type=int)
+    parser.add_argument("--start-year", type=int)
+    parser.add_argument("--end-year", type=int)
+    parser.add_argument("--limit", type=int, default=50000)
+    args = parser.parse_args()
+
+    if args.year is None and (args.start_year is None or args.end_year is None):
+        parser.error("provide --year or both --start-year and --end-year")
+    if args.year is not None and (args.start_year is not None or args.end_year is not None):
+        parser.error("use either --year or --start-year/--end-year, not both")
+
+    if args.year is not None:
+        years = [args.year]
+    else:
+        if args.start_year > args.end_year:
+            parser.error("--start-year must be <= --end-year")
+        years = list(range(args.start_year, args.end_year + 1))
+
+    results = [download_year(year, limit=args.limit) for year in years]
+    print(json.dumps({"years": results}, indent=2))
 
 
 if __name__ == "__main__":

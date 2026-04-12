@@ -134,6 +134,7 @@ def geocode_batch(rows: list[tuple[str, str, str]]) -> list[dict[str, str]]:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, required=True)
+    parser.add_argument("--cache-path", type=Path, default=Path("data/meta/census_unique_coords_cache.csv"))
     args = parser.parse_args()
     year = args.year
 
@@ -141,9 +142,10 @@ def main() -> None:
     out_parquet = Path(f"data/derived/public_event_spine_{year}_census_geo.parquet")
     out_csv = Path(f"data/derived/public_event_spine_{year}_census_geo.csv")
     summary_path = Path(f"data/meta/public_event_spine_{year}_census_geo_summary.json")
-    cache_path = Path(f"data/meta/public_event_spine_{year}_unique_coords_census.csv")
+    cache_path = args.cache_path
 
     out_parquet.parent.mkdir(parents=True, exist_ok=True)
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
     summary_path.parent.mkdir(parents=True, exist_ok=True)
 
     spine = pl.scan_parquet(spine_path).with_columns(
@@ -177,7 +179,21 @@ def main() -> None:
         .collect()
     )
 
-    cache_before = load_cache(cache_path).unique(subset=["COORD_ID"], keep="last")
+    seeded_caches = [
+        path
+        for path in sorted(cache_path.parent.glob("public_event_spine_*_unique_coords_census.csv"))
+        if path != cache_path
+    ]
+    cache_seed_frames = [load_cache(path) for path in seeded_caches if path.exists()]
+    cache_seed = (
+        pl.concat(cache_seed_frames, how="diagonal_relaxed").unique(subset=["COORD_ID"], keep="last")
+        if cache_seed_frames
+        else empty_cache_df()
+    )
+    cache_before = (
+        pl.concat([load_cache(cache_path), cache_seed], how="diagonal_relaxed")
+        .unique(subset=["COORD_ID"], keep="last")
+    )
 
     missing_coords = (
         unique_coords.lazy()
@@ -220,11 +236,13 @@ def main() -> None:
         "output_parquet": str(out_parquet),
         "output_csv": str(out_csv),
         "coord_cache_path": str(cache_path),
+        "seeded_from_legacy_caches": [str(path) for path in seeded_caches],
         "benchmark": BENCHMARK,
         "vintage": VINTAGE,
         "total_input_rows": total_rows,
         "rows_with_coords": rows_with_coords,
         "unique_coords": unique_coords.height,
+        "seed_cache_rows": cache_seed.height,
         "cached_before": cache_before.height,
         "geocoded_now": len(new_cache_rows),
         "cache_rows_after": cache_after.height,
