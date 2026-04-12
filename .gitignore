@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+*.pyc
+
+# Local environments
+.venv/
+
+# Generated data
+data/raw/
+data/derived/
+data/meta/
+
+# OS noise
+.DS_Store
