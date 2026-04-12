@@ -22,6 +22,8 @@ FIELDS = [
     "susp_age_group",
     "susp_sex",
     "susp_race",
+    "latitude",
+    "longitude",
 ]
 
 

@@ -122,6 +122,8 @@ def main() -> None:
                         "SEX": clean(row.get("susp_sex")),
                         "RACE": clean(row.get("susp_race")),
                         "AGE_BUCKET": clean(row.get("susp_age_group")),
+                        "LATITUDE": clean(row.get("latitude")),
+                        "LONGITUDE": clean(row.get("longitude")),
                     },
                 )
                 counts["nypd_complaints"] += 1
@@ -148,8 +150,8 @@ def main() -> None:
                         "SEX": clean(row.get("SEX")),
                         "RACE": clean(row.get("RACE")),
                         "AGE_BUCKET": clean(row.get("AGE_GROUP")),
-                        "LATITUDE": clean(row.get("LATITUDE")),
-                        "LONGITUDE": clean(row.get("LONGITUDE")),
+                        "LATITUDE": clean(row.get("Latitude")),
+                        "LONGITUDE": clean(row.get("Longitude")),
                     },
                 )
                 counts["nypd_summonses"] += 1

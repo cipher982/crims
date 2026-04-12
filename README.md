@@ -80,6 +80,9 @@ uv run python scripts/build_doc_episode_dataset.py
 uv run python scripts/build_doc_daily_custody_enriched.py
 uv run python scripts/build_arrest_research_dataset.py --year 2024
 uv run python scripts/build_public_event_spine.py --year 2024
+uv run python scripts/build_arrest_research_dataset_polars.py --year 2024
+uv run python scripts/build_public_event_spine_polars.py --year 2024
+uv run python scripts/build_public_event_spine_census_geo.py --year 2024
 ```
 
 Open the file in VS Code or another editor that supports `# %%` cells if you want a notebook-like flow.
@@ -104,8 +107,14 @@ These generated data files are local artifacts and are intentionally ignored by 
 
 ## Current Best Processed Datasets
 
+- `data/derived/public_event_spine_2024_census_geo.parquet`
+  - canonical columnar event spine with Census geography attached where public coordinates exist
+- `data/derived/public_event_spine_2024.parquet`
+  - pre-geography canonical columnar version of the unified 2024 event spine
 - `data/derived/public_event_spine_2024.csv`
   - current singular tidy long-form public dataset across arrests, complaints, summonses, and DOC admissions / discharges for 2024
+- `data/derived/nypd_arrests_2024_research_dataset.parquet`
+  - canonical columnar version of the arrest-centered 2024 linkage dataset
 - `data/derived/doc_custody_episodes_joined.csv`
   - exact and candidate custody episode joins from DOC admissions + discharges
 - `data/derived/doc_daily_custody_enriched.csv`
@@ -115,7 +124,29 @@ These generated data files are local artifacts and are intentionally ignored by 
 
 ## Current Success Criteria
 
-- keep `public_event_spine_2024.csv` as the current singular tidy dataset
+- keep `public_event_spine_2024_census_geo.parquet` as the canonical singular tidy dataset
+- keep `public_event_spine_2024.parquet` as the clean pre-geography staging layer
+- keep `public_event_spine_2024.csv` as a convenience export when helpful
 - enrich rows with stable geography like census tract / block group where public coordinates exist
 - keep every linkage labeled as exact, candidate, or unsupported
 - leave room for later institutional identifiers without pretending public data already provides them
+
+## Polars Rewrite
+
+Rewrite targets:
+
+- use Polars lazy scans from raw CSV instead of repeated row-by-row Python loops
+- keep raw CSVs as immutable inputs
+- make Parquet the canonical processed format
+- keep CSV exports as convenience artifacts, not the primary internal format
+- geocode only unique coordinate pairs, cache them locally, and join the cache back into the spine
+- keep transforms expression-driven so query planning stays optimizable
+- preserve the same exact / candidate / unsupported linkage semantics during the rewrite
+
+Canonical flow:
+
+1. raw CSV in `data/raw/`
+2. Polars lazy scan + clean + join
+3. canonical Parquet in `data/derived/`
+4. optional CSV export
+5. local JSON summary and local coordinate cache in `data/meta/`

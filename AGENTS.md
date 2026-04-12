@@ -10,14 +10,16 @@
 | --- | --- |
 | Language(s) | Python 3 |
 | Framework(s) | none |
-| Database(s) | local flat files first; optional DuckDB for analysis |
-| Key dependencies | stdlib first; add analysis deps only when they unlock clear value |
+| Database(s) | local files first; Parquet as canonical processed layer; optional DuckDB for ad hoc analysis |
+| Key dependencies | Polars for scans/joins/writes; stdlib for small glue code; add more only when they unlock clear value |
 
 ## Build & Test
 
 | Action | Command |
 | --- | --- |
 | Run exploration file | `uv run python scripts/public_mvp.py` |
+| Build canonical event spine | `uv run python scripts/build_public_event_spine_polars.py --year 2024` |
+| Enrich spine with Census geographies | `uv run python scripts/build_public_event_spine_census_geo.py --year 2024` |
 | Run a one-off Python check | `uv run python -c "..."` |
 | List raw data | `find data -maxdepth 2 -type f | sort` |
 
@@ -27,9 +29,11 @@ This repo should stay simple. The core flow is:
 
 1. acquire raw public datasets locally
 2. inspect heads, keys, nulls, and date coverage
-3. test one join at a time
-4. keep exact joins separate from heuristic joins
-5. document what is trustworthy and what is not
+3. turn raw CSV into tidy Parquet-backed yearly datasets with Polars lazy scans
+4. test one join at a time
+5. keep exact joins separate from heuristic joins
+6. geocode only unique coordinate pairs, cache the results locally, and join them back in
+7. document what is trustworthy and what is not
 
 Prefer notebook-style exploration over early pipeline design.
 
@@ -43,9 +47,11 @@ Prefer notebook-style exploration over early pipeline design.
 
 Current strong outcome:
 
-- maintain one singular tidy event-spine dataset for the active year
+- keep one singular tidy yearly event-spine dataset as the main research table
+- prefer the census-enriched Parquet spine as the active canonical output when it exists
+- make Parquet the canonical processed format and CSV exports optional convenience artifacts
 - keep exact joins, candidate joins, and unsupported joins clearly labeled
-- enrich event rows with the best lawful public identifiers and stable geography
+- enrich event rows with stable public geography such as tract and block group where coordinates exist
 - preserve raw source files locally and keep them out of git
 - keep repo docs and scripts concise enough to stay inspectable
 
@@ -56,6 +62,8 @@ Current strong outcome:
 - When trying joins, start tiny and inspect actual matched rows.
 - Separate `exact`, `candidate`, and `unsupported` joins explicitly.
 - Flag stale or suspicious feeds immediately.
+- Prefer Polars expressions and lazy scans over Python row loops for repeatable transforms.
+- Geocode deduplicated coordinates once, cache them, and reuse the cache on reruns.
 
 ## Plan Mode
 
