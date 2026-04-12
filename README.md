@@ -77,6 +77,7 @@ uv run python scripts/public_mvp.py
 uv run python scripts/download_public_data.py <optional-slugs>
 uv run python scripts/download_complaints_subset.py --year 2024
 uv run python scripts/build_doc_episode_dataset.py
+uv run python scripts/build_doc_daily_custody_enriched.py
 uv run python scripts/build_arrest_research_dataset.py --year 2024
 ```
 
@@ -104,5 +105,7 @@ These generated data files are local artifacts and are intentionally ignored by 
 
 - `data/derived/doc_custody_episodes_joined.csv`
   - exact and candidate custody episode joins from DOC admissions + discharges
+- `data/derived/doc_daily_custody_enriched.csv`
+  - current custody snapshot enriched with discharge-link status from the DOC episode build
 - `data/derived/nypd_arrests_2024_research_dataset.csv`
   - arrest-centered 2024 file with public identifiers, location fields, and complaint-link candidate status
