@@ -112,3 +112,10 @@ These generated data files are local artifacts and are intentionally ignored by 
   - current custody snapshot enriched with discharge-link status from the DOC episode build
 - `data/derived/nypd_arrests_2024_research_dataset.csv`
   - arrest-centered 2024 file with public identifiers, location fields, and complaint-link candidate status
+
+## Current Success Criteria
+
+- keep `public_event_spine_2024.csv` as the current singular tidy dataset
+- enrich rows with stable geography like census tract / block group where public coordinates exist
+- keep every linkage labeled as exact, candidate, or unsupported
+- leave room for later institutional identifiers without pretending public data already provides them

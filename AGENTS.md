@@ -41,13 +41,13 @@ Prefer notebook-style exploration over early pipeline design.
 
 ## Success Criteria
 
-Today’s strong outcome:
+Current strong outcome:
 
-- primary public datasets downloaded locally
-- row counts, date coverage, and key fields verified
-- one exact join working on local data
-- one heuristic cross-stage join explored with ambiguity measured
-- findings written down tightly, without doc sprawl
+- maintain one singular tidy event-spine dataset for the active year
+- keep exact joins, candidate joins, and unsupported joins clearly labeled
+- enrich event rows with the best lawful public identifiers and stable geography
+- preserve raw source files locally and keep them out of git
+- keep repo docs and scripts concise enough to stay inspectable
 
 ## Conventions
 
@@ -77,8 +77,9 @@ Today’s strong outcome:
 
 ## Git Workflows
 
-- This workspace may not be a git repo yet.
-- If git is initialized later, keep commits small and data files out of version control unless explicitly requested.
+- This workspace is a git repo.
+- Keep commits small and source-only.
+- Raw and derived data stay out of version control unless explicitly requested.
 
 ## Updating This File
 

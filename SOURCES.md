@@ -28,3 +28,4 @@ This is the working source sheet. It is deliberately short and only includes sou
 - Cross-stage public joins will be heuristic unless we later obtain restricted identifiers.
 - The current/YTD NYC feeds need validation each time because the live endpoints we tested looked one year behind.
 - For working joins, a targeted complaint slice can be more useful than immediately pulling the full complaint archive.
+- The current processed focus is a unified yearly event spine plus geospatial enrichment.
