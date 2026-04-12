@@ -79,6 +79,7 @@ uv run python scripts/download_complaints_subset.py --year 2024
 uv run python scripts/build_doc_episode_dataset.py
 uv run python scripts/build_doc_daily_custody_enriched.py
 uv run python scripts/build_arrest_research_dataset.py --year 2024
+uv run python scripts/build_public_event_spine.py --year 2024
 ```
 
 Open the file in VS Code or another editor that supports `# %%` cells if you want a notebook-like flow.
@@ -103,6 +104,8 @@ These generated data files are local artifacts and are intentionally ignored by 
 
 ## Current Best Processed Datasets
 
+- `data/derived/public_event_spine_2024.csv`
+  - current singular tidy long-form public dataset across arrests, complaints, summonses, and DOC admissions / discharges for 2024
 - `data/derived/doc_custody_episodes_joined.csv`
   - exact and candidate custody episode joins from DOC admissions + discharges
 - `data/derived/doc_daily_custody_enriched.csv`
