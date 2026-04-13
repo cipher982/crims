@@ -3,7 +3,6 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { withBasePath } from "@/lib/base-path";
 
 interface Point {
   lat: number;
@@ -13,9 +12,9 @@ interface Point {
 
 // Fix default marker icon issue with Next.js/webpack
 const icon = new L.Icon({
-  iconUrl: withBasePath("/leaflet/marker-icon.png"),
-  iconRetinaUrl: withBasePath("/leaflet/marker-icon-2x.png"),
-  shadowUrl: withBasePath("/leaflet/marker-shadow.png"),
+  iconUrl: "/leaflet/marker-icon.png",
+  iconRetinaUrl: "/leaflet/marker-icon-2x.png",
+  shadowUrl: "/leaflet/marker-shadow.png",
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],

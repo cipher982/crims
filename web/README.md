@@ -31,21 +31,6 @@ uv run python scripts/analyze_doc_cohort_recidivism.py
 uv run python scripts/build_arrest_doc_bridge.py
 ```
 
-For production deploys, the web app only needs these four files:
-
-- `doc_recidivism_persons.parquet`
-- `doc_recidivism_episodes.parquet`
-- `doc_cohort_recidivism.parquet`
-- `arrest_doc_bridge.parquet`
-
-Mount them into the container and set `CRIMS_DATA_DIR` to that directory. The
-bundled Docker image defaults to `/data/derived` and exposes `GET /health` for
-Coolify checks.
-
-For a subdirectory deploy such as `drose.io/nyc-crime`, set
-`NEXT_PUBLIC_BASE_PATH=/nyc-crime` at build time and runtime. Public asset URLs
-and the random-person redirect are base-path aware.
-
 ## Routes
 
 - `/` — top recidivists plus headline recidivism stats
