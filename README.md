@@ -110,6 +110,7 @@ The machine-readable inventory lives in `data/meta/local_inventory.json`.
 High-signal findings and join summaries live in `data/meta/session_findings.json`.
 
 These generated data files are local artifacts and are intentionally ignored by git.
+Raw source files stay in CSV. Derived datasets are now kept in Parquet by default.
 
 ## Current Best Processed Datasets
 
@@ -121,12 +122,10 @@ These generated data files are local artifacts and are intentionally ignored by 
   - pre-geography canonical columnar version of the unified 2024 event spine
 - `data/derived/nypd_arrests_2024_research_dataset.parquet`
   - canonical columnar version of the arrest-centered 2024 linkage dataset
-- `data/derived/doc_custody_episodes_joined.csv`
+- `data/derived/doc_custody_episodes_joined.parquet`
   - exact and candidate custody episode joins from DOC admissions + discharges
-- `data/derived/doc_daily_custody_enriched.csv`
+- `data/derived/doc_daily_custody_enriched.parquet`
   - current custody snapshot enriched with discharge-link status from the DOC episode build
-- `data/derived/nypd_arrests_2024_research_dataset.csv`
-  - arrest-centered 2024 file with public identifiers, location fields, and complaint-link candidate status
 
 ## Current Success Criteria
 
@@ -134,6 +133,7 @@ These generated data files are local artifacts and are intentionally ignored by 
 - keep yearly `public_event_spine_<year>_census_geo.parquet` files as the reproducible building blocks
 - keep `public_event_spine_2024.parquet` as the clean pre-geography staging layer
 - keep CSV exports optional and only generate them when explicitly useful
+- keep the derived layer Parquet-only after cleanup unless a human explicitly wants CSV output persisted
 - enrich rows with stable geography like census tract / block group where public coordinates exist
 - keep every linkage labeled as exact, candidate, or unsupported
 - leave room for later institutional identifiers without pretending public data already provides them

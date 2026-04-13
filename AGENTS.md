@@ -52,6 +52,7 @@ Current strong outcome:
 - keep one singular tidy yearly event-spine dataset as the main research table
 - prefer the census-enriched panel Parquet as the active canonical output when it exists
 - make Parquet the canonical processed format and keep CSV exports opt-in
+- keep raw source files in CSV and keep derived artifacts in Parquet unless a human explicitly asks to retain CSVs
 - keep exact joins, candidate joins, and unsupported joins clearly labeled
 - enrich event rows with stable public geography such as tract and block group where coordinates exist
 - keep one compact machine-readable profile for the active panel so quality and coverage can be checked quickly
