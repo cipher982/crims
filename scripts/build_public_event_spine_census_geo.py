@@ -232,7 +232,15 @@ def main() -> None:
     if out_csv is not None:
         pl.scan_parquet(out_parquet).sink_csv(out_csv)
 
-    match_counts_df = cache_after.group_by("CENSUS_MATCH_STATUS").agg(pl.len().alias("n"))
+    cache_match_counts_df = (
+        cache_after.group_by("CENSUS_MATCH_STATUS").agg(pl.len().alias("n"))
+    )
+    output_match_counts_df = (
+        pl.scan_parquet(out_parquet)
+        .group_by("CENSUS_MATCH_STATUS")
+        .agg(pl.len().alias("n"))
+        .collect()
+    )
     summary = {
         "year": year,
         "input_path": str(spine_path),
@@ -248,10 +256,16 @@ def main() -> None:
         "cached_before": cache_before.height,
         "geocoded_now": len(new_cache_rows),
         "cache_rows_after": cache_after.height,
+        "cache_match_counts": dict(
+            zip(
+                cache_match_counts_df["CENSUS_MATCH_STATUS"].to_list(),
+                cache_match_counts_df["n"].to_list(),
+            )
+        ),
         "geocoder_match_counts": dict(
             zip(
-                match_counts_df["CENSUS_MATCH_STATUS"].to_list(),
-                match_counts_df["n"].to_list(),
+                output_match_counts_df["CENSUS_MATCH_STATUS"].fill_null("NO_COORDS").to_list(),
+                output_match_counts_df["n"].to_list(),
             )
         ),
     }

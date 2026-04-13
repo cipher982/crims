@@ -15,6 +15,7 @@ Outputs:
 from __future__ import annotations
 
 import json
+import warnings
 from pathlib import Path
 
 import polars as pl
@@ -40,29 +41,54 @@ def build_cohort_table(episodes: pl.DataFrame) -> pl.DataFrame:
 
     A person can appear in multiple cohorts (discharged in 2016 and again in 2018).
     We take the *first discharge per person per year* as the cohort entry point
-    and look for any subsequent admission.
+    and look for the first strictly later admission.
+
+    Same-day and overlapping admissions are treated as within-custody churn, not
+    recidivism. Since the public feeds are date-granular, a "return" means an
+    admission on a later calendar day.
     """
-    # Only episodes with a discharge date
     discharged = episodes.filter(pl.col("discharge_date").is_not_null()).sort(
-        ["INMATEID", "discharge_date"]
+        ["INMATEID", "discharge_date", "admit_date"]
     )
 
-    # For each discharge, find the next admission date for that person
-    # (already have this implicitly — the next episode's admit_date)
+    admissions = (
+        episodes.select("INMATEID", "admit_date")
+        .drop_nulls()
+        .sort(["INMATEID", "admit_date"])
+        .rename({"admit_date": "next_admit_date"})
+    )
+
     discharged = discharged.with_columns(
-        pl.col("admit_date").shift(-1).over("INMATEID").alias("next_admit_date"),
+        pl.col("discharge_date").dt.year().alias("cohort_year"),
+        (pl.col("discharge_date") + pl.duration(days=1)).alias("return_search_start"),
     )
 
-    # Compute days to next admission
+    # Polars warns here because it cannot prove grouped sortedness statically.
+    # Both frames are explicitly sorted by INMATEID + date above.
+    with warnings.catch_warnings():
+        warnings.filterwarnings(
+            "ignore",
+            message="Sortedness of columns cannot be checked when 'by' groups provided",
+            category=UserWarning,
+        )
+        discharged = discharged.join_asof(
+            admissions,
+            left_on="return_search_start",
+            right_on="next_admit_date",
+            by="INMATEID",
+            strategy="forward",
+        )
+
+    discharged = (
+        discharged.drop("return_search_start")
+        .unique(subset=["INMATEID", "cohort_year"], keep="first")
+        .sort(["INMATEID", "cohort_year"])
+    )
+
     discharged = discharged.with_columns(
         (pl.col("next_admit_date") - pl.col("discharge_date"))
         .dt.total_days()
         .alias("days_to_return"),
-    )
-
-    # Cohort year = year of discharge
-    discharged = discharged.with_columns(
-        pl.col("discharge_date").dt.year().alias("cohort_year"),
     )
 
     # Data end date for censoring: use the max admission date in the dataset
@@ -80,7 +106,11 @@ def build_cohort_table(episodes: pl.DataFrame) -> pl.DataFrame:
         discharged = discharged.with_columns(
             pl.when(pl.col("followup_days") < days)
             .then(None)  # censored — not enough follow-up
-            .when(pl.col("days_to_return").is_not_null() & (pl.col("days_to_return") <= days))
+            .when(
+                pl.col("days_to_return").is_not_null()
+                & (pl.col("days_to_return") > 0)
+                & (pl.col("days_to_return") <= days)
+            )
             .then(True)
             .otherwise(False)
             .alias(label),
