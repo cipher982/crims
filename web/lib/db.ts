@@ -1,8 +1,6 @@
 import { DuckDBInstance } from "@duckdb/node-api";
 import path from "path";
 
-const DATA_DIR = path.resolve(process.cwd(), "../data/derived");
-
 let instance: DuckDBInstance | null = null;
 
 async function getInstance(): Promise<DuckDBInstance> {
@@ -27,7 +25,14 @@ export async function query<T = Record<string, unknown>>(
 
 /** Resolve a parquet file path relative to data/derived/ */
 export function pq(filename: string): string {
-  return path.join(DATA_DIR, filename).replace(/'/g, "''");
+  return path.join(getDataDir(), filename).replace(/'/g, "''");
+}
+
+export function getDataDir(): string {
+  return (
+    process.env.CRIMS_DATA_DIR ??
+    path.join(/*turbopackIgnore: true*/ process.cwd(), "..", "data", "derived")
+  );
 }
 
 function normalizeRecord(row: Record<string, unknown>): Record<string, unknown> {
