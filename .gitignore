@@ -10,5 +10,12 @@ data/raw/
 data/derived/
 data/meta/
 
+# Local agent files
+/CLAUDE.md
+/web/CLAUDE.md
+
+# Local/generated dashboard assets
+/lib/
+
 # OS noise
 .DS_Store

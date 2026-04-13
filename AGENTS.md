@@ -53,7 +53,7 @@ Key fact from Vera Institute research: NYC DOC does not record CJTN or arrest da
 - 34% no match
 - Linkage quality is worse 2014-2017, better 2020-2024
 
-**Arrests ↔ DOC admissions** — heuristic on date + sex + penal code + imputed age group. Tested: 16.5K unique matches (one admission to exactly one arrest) out of 169K eligible admissions (~10%). Covers 14.7K unique people, of which 1.5K have 2+ linked arrest-to-jail episodes. Narrow but clean — usable as a candidate bridge.
+**Arrests ↔ DOC admissions** — heuristic on date + sex + penal code + imputed age group. Current derived output: 12.4K unique matches (one admission to exactly one arrest). Covers 11.4K unique people, of which 904 have 2+ linked arrest-to-jail episodes. Narrow but clean — usable as a candidate bridge.
 
 **Everything else** — not connected. No court outcomes, no cross-arrest person tracking.
 
@@ -69,8 +69,8 @@ DOC race is useless for cross-source joins — only 3 values (BLACK, UNKNOWN, AS
 
 | Goal | Feasible now? | Size |
 |------|--------------|------|
-| DOC jail recidivism (repeat stays, gaps, charge patterns) | **Yes** — exact `INMATEID` | 81K repeat people, 231K readmission events |
-| Linked arrest→jail episodes for a subset | **Candidate** — heuristic unique match | 16.5K episodes, 1.5K repeat people |
+| DOC jail recidivism (repeat stays, gaps, charge patterns) | **Yes** — exact `INMATEID` | 86K repeat people, 250K readmission events |
+| Linked arrest→jail episodes for a subset | **Candidate** — heuristic unique match | 12.4K episodes, 904 repeat people |
 | Arrest-to-complaint linkage | Partial (~40%) | 1.1M linked of 2.8M arrests |
 | Arrest-to-court-outcome | **No** — OCA extracts intentionally de-identified | — |
 | Multi-arrest recidivism (same person, different arrests) | **No** — requires NYSID via DCJS agreement | — |
@@ -89,7 +89,7 @@ DOC race is useless for cross-source joins — only 3 values (BLACK, UNKNOWN, AS
 ## Key Commands
 
 ```bash
-uv run streamlit run dashboard.py                       # graph explorer on localhost:8501
+cd web && bun run dev                                    # Next.js explorer on localhost:3000
 uv run python scripts/analyze_doc_recidivism.py         # person + episode recidivism
 uv run python scripts/analyze_doc_cohort_recidivism.py  # time-bounded cohort rates
 uv run python scripts/build_arrest_doc_bridge.py        # heuristic arrest-DOC linkage
@@ -127,8 +127,8 @@ Geocoding deduplicates unique coordinate pairs, caches in `data/meta/`, joins ba
 - 10.6M rows, 31 columns, 241MB Parquet
 - SEX: 99%, RACE: 96%, AGE_BUCKET: 92% coverage (NYPD sources)
 - Census tract: 86-95% coverage (varies by year; DOC has 0% — no coordinates)
-- DOC `INMATEID`: 187K unique people, 44% (81K) returned to jail 2+ times, 3.8K returned 10+ times
-- Median DOC readmission gap: 237 days. 22K readmissions within 30 days.
+- DOC `INMATEID`: 197K unique people, 44% (86K) returned to jail 2+ times, 4.4K returned 10+ times
+- Median DOC readmission gap: 182 days. 40K readmissions within 30 days.
 - NYPD: zero person identifiers, zero recidivism capability
 
 ## Known Data Quality Issues
