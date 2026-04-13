@@ -89,11 +89,13 @@ DOC race is useless for cross-source joins — only 3 values (BLACK, UNKNOWN, AS
 ## Key Commands
 
 ```bash
+uv run streamlit run dashboard.py                       # graph explorer on localhost:8501
+uv run python scripts/analyze_doc_recidivism.py         # person + episode recidivism
+uv run python scripts/analyze_doc_cohort_recidivism.py  # time-bounded cohort rates
+uv run python scripts/build_arrest_doc_bridge.py        # heuristic arrest-DOC linkage
 uv run python scripts/build_public_event_panel.py --start-year 2014 --end-year 2024
 uv run python scripts/build_public_event_spine_census_geo.py --year 2024
-uv run python scripts/profile_public_event_panel.py --path data/derived/public_event_panel_2014_2024_census_geo.parquet
-uv run python scripts/download_public_data.py          # fetch raw sources
-uv run python scripts/build_doc_episode_dataset.py      # DOC exact joins
+uv run python scripts/download_public_data.py           # fetch raw sources
 ```
 
 Most build scripts accept `--year` or `--start-year / --end-year`. Add `--write-csv` only when you explicitly want a CSV export.
