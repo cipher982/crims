@@ -42,6 +42,10 @@ Mount them into the container and set `CRIMS_DATA_DIR` to that directory. The
 bundled Docker image defaults to `/data/derived` and exposes `GET /health` for
 Coolify checks.
 
+For a subdirectory deploy such as `drose.io/nyc-crime`, set
+`NEXT_PUBLIC_BASE_PATH=/nyc-crime` at build time and runtime. Public asset URLs
+and the random-person redirect are base-path aware.
+
 ## Routes
 
 - `/` — top recidivists plus headline recidivism stats
