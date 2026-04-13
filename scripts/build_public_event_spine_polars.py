@@ -98,6 +98,7 @@ def ensure_columns(lf: pl.LazyFrame) -> pl.LazyFrame:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, required=True)
+    parser.add_argument("--write-csv", action="store_true")
     args = parser.parse_args()
     year = args.year
 
@@ -108,7 +109,7 @@ def main() -> None:
     discharges_csv = Path("data/raw/doc_inmate_discharges.csv")
 
     out_parquet = Path(f"data/derived/public_event_spine_{year}.parquet")
-    out_csv = Path(f"data/derived/public_event_spine_{year}_polars.csv")
+    out_csv = Path(f"data/derived/public_event_spine_{year}_polars.csv") if args.write_csv else None
     summary_path = Path(f"data/meta/public_event_spine_{year}_polars_summary.json")
     out_parquet.parent.mkdir(parents=True, exist_ok=True)
     summary_path.parent.mkdir(parents=True, exist_ok=True)
@@ -223,7 +224,8 @@ def main() -> None:
 
     spine = pl.concat([arrests, complaints, summonses, admissions, discharges], how="diagonal_relaxed")
     spine.sink_parquet(out_parquet)
-    pl.scan_parquet(out_parquet).sink_csv(out_csv)
+    if out_csv is not None:
+        pl.scan_parquet(out_parquet).sink_csv(out_csv)
 
     source_counts_df = (
         pl.scan_parquet(out_parquet).group_by("EVENT_SOURCE").agg(pl.len().alias("n")).collect()
@@ -231,7 +233,7 @@ def main() -> None:
     summary = {
         "year": year,
         "output_parquet": str(out_parquet),
-        "output_csv": str(out_csv),
+        "output_csv": str(out_csv) if out_csv is not None else None,
         "rows_written": int(pl.scan_parquet(out_parquet).select(pl.len()).collect().item()),
         "source_counts": dict(zip(source_counts_df["EVENT_SOURCE"].to_list(), source_counts_df["n"].to_list())),
     }

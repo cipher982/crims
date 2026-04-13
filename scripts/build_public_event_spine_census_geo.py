@@ -67,6 +67,21 @@ def load_cache(cache_path: Path) -> pl.DataFrame:
     return pl.read_csv(cache_path, schema_overrides=CACHE_SCHEMA)
 
 
+def load_seed_cache(cache_path: Path) -> tuple[pl.DataFrame, list[str]]:
+    if cache_path.exists():
+        return load_cache(cache_path).unique(subset=["COORD_ID"], keep="last"), []
+
+    legacy_paths = sorted(cache_path.parent.glob("public_event_spine_*_unique_coords_census.csv"))
+    legacy_frames = [load_cache(path) for path in legacy_paths if path.exists()]
+    if not legacy_frames:
+        return empty_cache_df(), []
+
+    return (
+        pl.concat(legacy_frames, how="diagonal_relaxed").unique(subset=["COORD_ID"], keep="last"),
+        [str(path) for path in legacy_paths],
+    )
+
+
 def geocode_batch(rows: list[tuple[str, str, str]]) -> list[dict[str, str]]:
     with tempfile.TemporaryDirectory() as tmpdir:
         in_path = Path(tmpdir) / "coords.csv"
@@ -135,12 +150,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, required=True)
     parser.add_argument("--cache-path", type=Path, default=Path("data/meta/census_unique_coords_cache.csv"))
+    parser.add_argument("--write-csv", action="store_true")
     args = parser.parse_args()
     year = args.year
 
     spine_path = Path(f"data/derived/public_event_spine_{year}.parquet")
     out_parquet = Path(f"data/derived/public_event_spine_{year}_census_geo.parquet")
-    out_csv = Path(f"data/derived/public_event_spine_{year}_census_geo.csv")
+    out_csv = Path(f"data/derived/public_event_spine_{year}_census_geo.csv") if args.write_csv else None
     summary_path = Path(f"data/meta/public_event_spine_{year}_census_geo_summary.json")
     cache_path = args.cache_path
 
@@ -179,21 +195,7 @@ def main() -> None:
         .collect()
     )
 
-    seeded_caches = [
-        path
-        for path in sorted(cache_path.parent.glob("public_event_spine_*_unique_coords_census.csv"))
-        if path != cache_path
-    ]
-    cache_seed_frames = [load_cache(path) for path in seeded_caches if path.exists()]
-    cache_seed = (
-        pl.concat(cache_seed_frames, how="diagonal_relaxed").unique(subset=["COORD_ID"], keep="last")
-        if cache_seed_frames
-        else empty_cache_df()
-    )
-    cache_before = (
-        pl.concat([load_cache(cache_path), cache_seed], how="diagonal_relaxed")
-        .unique(subset=["COORD_ID"], keep="last")
-    )
+    cache_before, seeded_cache_paths = load_seed_cache(cache_path)
 
     missing_coords = (
         unique_coords.lazy()
@@ -227,22 +229,22 @@ def main() -> None:
         spine.join(geo_lookup, on=["LONGITUDE", "LATITUDE"], how="left")
         .sink_parquet(out_parquet)
     )
-    pl.scan_parquet(out_parquet).sink_csv(out_csv)
+    if out_csv is not None:
+        pl.scan_parquet(out_parquet).sink_csv(out_csv)
 
     match_counts_df = cache_after.group_by("CENSUS_MATCH_STATUS").agg(pl.len().alias("n"))
     summary = {
         "year": year,
         "input_path": str(spine_path),
         "output_parquet": str(out_parquet),
-        "output_csv": str(out_csv),
+        "output_csv": str(out_csv) if out_csv is not None else None,
         "coord_cache_path": str(cache_path),
-        "seeded_from_legacy_caches": [str(path) for path in seeded_caches],
+        "seeded_from_legacy_caches": seeded_cache_paths,
         "benchmark": BENCHMARK,
         "vintage": VINTAGE,
         "total_input_rows": total_rows,
         "rows_with_coords": rows_with_coords,
         "unique_coords": unique_coords.height,
-        "seed_cache_rows": cache_seed.height,
         "cached_before": cache_before.height,
         "geocoded_now": len(new_cache_rows),
         "cache_rows_after": cache_after.height,

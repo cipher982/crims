@@ -66,13 +66,14 @@ def clean_upper(col: str) -> pl.Expr:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--year", type=int, required=True)
+    parser.add_argument("--write-csv", action="store_true")
     args = parser.parse_args()
 
     year = args.year
     raw_arrests = Path("data/raw/nypd_arrests_historic.csv")
     raw_complaints = Path(f"data/raw/nypd_complaints_{year}_minimal.csv")
     out_parquet = Path(f"data/derived/nypd_arrests_{year}_research_dataset.parquet")
-    out_csv = Path(f"data/derived/nypd_arrests_{year}_research_dataset_polars.csv")
+    out_csv = Path(f"data/derived/nypd_arrests_{year}_research_dataset_polars.csv") if args.write_csv else None
     summary_path = Path(f"data/meta/nypd_arrests_{year}_research_dataset_polars_summary.json")
 
     out_parquet.parent.mkdir(parents=True, exist_ok=True)
@@ -226,12 +227,13 @@ def main() -> None:
     )
     status_counts = dict(zip(status_counts["COMPLAINT_MATCH_STATUS"], status_counts["n"]))
 
-    pl.scan_parquet(out_parquet).sink_csv(out_csv)
+    if out_csv is not None:
+        pl.scan_parquet(out_parquet).sink_csv(out_csv)
 
     summary = {
         "year": year,
         "output_parquet": str(out_parquet),
-        "output_csv": str(out_csv),
+        "output_csv": str(out_csv) if out_csv is not None else None,
         "rows_written": int(pl.scan_parquet(out_parquet).select(pl.len()).collect().item()),
         "status_counts": status_counts,
     }
