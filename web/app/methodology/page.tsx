@@ -73,10 +73,7 @@ export default async function MethodologyPage() {
           </div>
           <div className="drose-doc-list">
             <div className="drose-doc-item">
-              <p className="drose-doc-item-title">
-                <MethodBadge status="exact" />
-                Exact
-              </p>
+              <h3 className="drose-doc-item-title">Exact DOC joins</h3>
               <p className="drose-doc-item-copy">
                 DOC admissions and discharges join on <code>INMATEID + admit_date</code>,
                 which supports exact jail episode histories, repeat-admission
@@ -84,10 +81,7 @@ export default async function MethodologyPage() {
               </p>
             </div>
             <div className="drose-doc-item">
-              <p className="drose-doc-item-title">
-                <MethodBadge status="candidate" />
-                Candidate
-              </p>
+              <h3 className="drose-doc-item-title">Candidate arrest bridge</h3>
               <p className="drose-doc-item-copy">
                 The arrest bridge keeps only unique 1:1 matches after filtering
                 on same date, normalized sex, parsed penal code, and compatible
@@ -95,10 +89,7 @@ export default async function MethodologyPage() {
               </p>
             </div>
             <div className="drose-doc-item">
-              <p className="drose-doc-item-title">
-                <MethodBadge status="unsupported" />
-                Unsupported
-              </p>
+              <h3 className="drose-doc-item-title">Unsupported cross-stage claims</h3>
               <p className="drose-doc-item-copy">
                 Public court bulk extracts are de-identified and public prison
                 releases are aggregate, so this site does not claim full

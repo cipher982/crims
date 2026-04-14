@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { MethodBadge } from "@/components/method-badge";
 import { TierBadge } from "@/components/tier-badge";
 import { ClickableRow } from "@/components/clickable-row";
 import { SimpleBarChart } from "@/components/charts/bar-chart";
@@ -85,10 +84,7 @@ export default async function Home() {
           </div>
           <div className="drose-doc-list">
             <div className="drose-doc-item">
-              <p className="drose-doc-item-title">
-                <MethodBadge status="exact" />
-                Exact DOC histories
-              </p>
+              <h3 className="drose-doc-item-title">Exact DOC histories</h3>
               <p className="drose-doc-item-copy">
                 DOC person pages, episode counts, stay lengths, gap lengths, and
                 cohort return rates all come from exact joins inside the public
@@ -96,20 +92,14 @@ export default async function Home() {
               </p>
             </div>
             <div className="drose-doc-item">
-              <p className="drose-doc-item-title">
-                <MethodBadge status="candidate" />
-                Candidate arrest context
-              </p>
+              <h3 className="drose-doc-item-title">Candidate arrest context</h3>
               <p className="drose-doc-item-copy">
                 Arrest rows and map points are candidate matches only. They come
                 from a strict 1:1 bridge, not a full cross-system person key.
               </p>
             </div>
             <div className="drose-doc-item">
-              <p className="drose-doc-item-title">
-                <MethodBadge status="unsupported" />
-                Unsupported claims
-              </p>
+              <h3 className="drose-doc-item-title">Unsupported claims</h3>
               <p className="drose-doc-item-copy">
                 Court outcomes, prison histories, parole, and citywide
                 multi-arrest identity resolution remain outside what public bulk
