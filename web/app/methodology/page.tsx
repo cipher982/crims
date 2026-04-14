@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import Link from "next/link";
 import { MethodBadge } from "@/components/method-badge";
 import { StatsCard } from "@/components/stats-card";
@@ -13,9 +14,9 @@ import {
 } from "@/lib/research";
 
 export const metadata = { title: "Methodology - NYC CJ Explorer" };
-export const dynamic = "force-dynamic";
 
 export default async function MethodologyPage() {
+  await connection();
   const [stats, panelProfile] = await Promise.all([
     getMethodStats(),
     getOptionalPanelProfile(),

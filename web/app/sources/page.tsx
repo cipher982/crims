@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import Link from "next/link";
 import { MethodBadge } from "@/components/method-badge";
 import { formatNumber } from "@/lib/format";
@@ -11,9 +12,9 @@ import {
 } from "@/lib/research";
 
 export const metadata = { title: "Sources - NYC CJ Explorer" };
-export const dynamic = "force-dynamic";
 
 export default async function SourcesPage() {
+  await connection();
   const panelProfile = await getOptionalPanelProfile();
 
   return (
