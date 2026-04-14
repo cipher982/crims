@@ -50,6 +50,8 @@ uv run python scripts/build_arrest_doc_bridge.py
 - `/` — top recidivists plus headline recidivism stats
 - `/search` — URL-driven people search with filters
 - `/person/[id]` — detailed person profile with timeline, episode chart, and bridge geography
+- `/methodology` — detailed build notes, join logic, and confidence boundaries
+- `/sources` — public source inventory for the live app and broader repo panel
 - `/random-person` — redirect to a random high-repeat person
 
 ## Notes

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MethodBadge } from "@/components/method-badge";
 import { TierBadge } from "@/components/tier-badge";
 import { ClickableRow } from "@/components/clickable-row";
 import { SimpleBarChart } from "@/components/charts/bar-chart";
@@ -69,6 +70,89 @@ export default async function Home() {
         </div>
       </section>
 
+      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
+        <div className="drose-panel">
+          <div className="drose-section-header">
+            <div>
+              <p className="drose-kicker">How To Read This Explorer</p>
+              <h2 className="drose-section-title">What is exact and what is not</h2>
+              <p className="drose-section-copy">
+                The site centers exact NYC DOC jail histories. Arrest context is
+                narrower and appears only when the public data supports a
+                candidate bridge.
+              </p>
+            </div>
+          </div>
+          <div className="space-y-3">
+            <div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/6 p-4">
+              <div className="mb-2">
+                <MethodBadge status="exact" />
+              </div>
+              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                DOC person pages, episode counts, stay lengths, gap lengths, and
+                cohort return rates all come from exact joins inside the public
+                DOC feeds.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-amber-400/15 bg-amber-400/6 p-4">
+              <div className="mb-2">
+                <MethodBadge status="candidate" />
+              </div>
+              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Arrest rows and map points are candidate matches only. They come
+                from a strict 1:1 bridge, not a full cross-system person key.
+              </p>
+            </div>
+            <div className="rounded-2xl border border-rose-400/15 bg-rose-400/6 p-4">
+              <div className="mb-2">
+                <MethodBadge status="unsupported" />
+              </div>
+              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Court outcomes, prison histories, parole, and citywide
+                multi-arrest identity resolution remain outside what public bulk
+                data can support here.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="drose-panel">
+          <div className="drose-section-header">
+            <div>
+              <p className="drose-kicker">Methods + Sources</p>
+              <h2 className="drose-section-title">What the app is built from</h2>
+              <p className="drose-section-copy">
+                The current web app reads four derived Parquet outputs built from
+                public NYC DOC and NYPD data. The broader repo also carries a
+                larger public event panel for research work outside these routes.
+              </p>
+            </div>
+          </div>
+          <div className="space-y-3 text-sm leading-7 text-[var(--drose-text-muted)]">
+            <p className="m-0">
+              Core runtime inputs: DOC admissions, DOC discharges, DOC cohort
+              outcomes, and the candidate arrest-DOC bridge.
+            </p>
+            <p className="m-0">
+              Broader repo inputs: NYPD complaints, arrests, summonses, and
+              Census geography enrichment for the multi-year public event panel.
+            </p>
+            <p className="m-0">
+              The detailed build notes now live on dedicated site pages so the
+              methodology stays visible instead of buried in repo docs.
+            </p>
+          </div>
+          <div className="drose-actions">
+            <Link href="/methodology" className="drose-button drose-button-primary">
+              Read Methodology
+            </Link>
+            <Link href="/sources" className="drose-button drose-button-secondary">
+              Browse Sources
+            </Link>
+          </div>
+        </div>
+      </section>
+
       <section className="drose-panel">
         <div className="drose-section-header">
           <div>
@@ -76,7 +160,9 @@ export default async function Home() {
             <h2 className="drose-section-title">Top Recidivists</h2>
             <p className="drose-section-copy">
               People with the most jail admissions. Click any row for the full timeline,
-              gap structure, linked arrests, and person-level history.
+              gap structure, linked arrests, and person-level history. The person
+              identity here is exact within DOC. Any linked arrests you see later
+              are candidate bridge matches, not ground-truth cross-system IDs.
             </p>
           </div>
         </div>
@@ -132,6 +218,37 @@ export default async function Home() {
             color="#ec4899"
             pct
           />
+        </div>
+      </section>
+
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="drose-panel">
+          <div className="drose-section-header">
+            <div>
+              <p className="drose-kicker">Scope</p>
+              <h2 className="drose-section-title">What this site covers well</h2>
+            </div>
+          </div>
+          <p className="drose-panel-copy">
+            Exact DOC repeat-admission histories, timing between jail episodes,
+            cohort return rates, and a narrow arrest-to-jail bridge subset where
+            the public fields line up cleanly enough to keep only unique 1:1
+            matches.
+          </p>
+        </div>
+        <div className="drose-panel">
+          <div className="drose-section-header">
+            <div>
+              <p className="drose-kicker">Limits</p>
+              <h2 className="drose-section-title">What public data still cannot do</h2>
+            </div>
+          </div>
+          <p className="drose-panel-copy">
+            This explorer does not claim court outcomes, prison histories,
+            parole, or true multi-arrest person resolution across the full NYC
+            criminal-justice pipeline. Those require restricted identifiers that
+            are not exposed in public bulk releases.
+          </p>
         </div>
       </section>
     </div>

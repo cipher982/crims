@@ -21,6 +21,12 @@ export function Nav() {
           <Link href="/search" className="drose-nav-link">
             Search People
           </Link>
+          <Link href="/methodology" className="drose-nav-link">
+            Methodology
+          </Link>
+          <Link href="/sources" className="drose-nav-link">
+            Sources
+          </Link>
           <Link href="/random-person" className="drose-nav-link">
             Random Person
           </Link>

@@ -75,6 +75,75 @@ export async function getTopRecidivists(limit = 25) {
   );
 }
 
+export async function getMethodStats() {
+  const [personAgg, episodeAgg, cohortAgg, bridgeAgg] = await Promise.all([
+    query<{
+      unique_people: number;
+      repeat_people: number;
+      max_admissions: number;
+    }>(
+      `SELECT count(*) as unique_people,
+              count(*) FILTER (WHERE total_admissions > 1) as repeat_people,
+              max(total_admissions) as max_admissions
+       FROM '${PERSONS}'`
+    ),
+    query<{
+      jail_episodes: number;
+      median_gap_days: number | null;
+    }>(
+      `SELECT count(*) as jail_episodes,
+              median(gap_days) FILTER (WHERE gap_days IS NOT NULL)::double as median_gap_days
+       FROM '${EPISODES}'`
+    ),
+    query<{
+      eligible: number;
+      returned: number;
+    }>(
+      `SELECT count(*) FILTER (WHERE returned_1yr IS NOT NULL) as eligible,
+              count(*) FILTER (WHERE returned_1yr = true) as returned
+       FROM '${COHORT}'`
+    ),
+    query<{
+      bridge_matches: number;
+      bridge_people: number;
+      repeat_bridge_people: number;
+    }>(
+      `WITH per_person AS (
+         SELECT INMATEID, count(*) as linked_events
+         FROM '${BRIDGE}'
+         GROUP BY INMATEID
+       )
+       SELECT
+         (SELECT count(*) FROM '${BRIDGE}') as bridge_matches,
+         count(*) as bridge_people,
+         count(*) FILTER (WHERE linked_events > 1) as repeat_bridge_people
+       FROM per_person`
+    ),
+  ]);
+
+  const people = personAgg[0];
+  const episodes = episodeAgg[0];
+  const cohort = cohortAgg[0];
+  const bridge = bridgeAgg[0];
+
+  return {
+    uniquePeople: people.unique_people,
+    repeatPeople: people.repeat_people,
+    repeatRate:
+      people.unique_people > 0
+        ? people.repeat_people / people.unique_people
+        : 0,
+    jailEpisodes: episodes.jail_episodes,
+    medianGapDays: episodes.median_gap_days,
+    maxAdmissions: people.max_admissions,
+    returnRate1yr:
+      cohort.eligible > 0 ? cohort.returned / cohort.eligible : 0,
+    bridgeMatches: bridge.bridge_matches ?? 0,
+    bridgePeople: bridge.bridge_people ?? 0,
+    repeatBridgePeople: bridge.repeat_bridge_people ?? 0,
+  };
+}
+
 // ---------------------------------------------------------------------------
 // Person detail
 // ---------------------------------------------------------------------------
