@@ -11,6 +11,7 @@ import {
 } from "@/lib/research";
 
 export const metadata = { title: "Sources - NYC CJ Explorer" };
+export const dynamic = "force-dynamic";
 
 export default async function SourcesPage() {
   const panelProfile = await getOptionalPanelProfile();

@@ -13,6 +13,7 @@ import {
 } from "@/lib/research";
 
 export const metadata = { title: "Methodology - NYC CJ Explorer" };
+export const dynamic = "force-dynamic";
 
 export default async function MethodologyPage() {
   const [stats, panelProfile] = await Promise.all([
