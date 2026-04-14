@@ -1,8 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getPersonById, getPersonEpisodes, getPersonBridge } from "@/lib/queries";
-import { TierBadge } from "@/components/tier-badge";
-import { chargeLabel, formatDate } from "@/lib/format";
+import { chargeLabel, formatDate, tierLabel } from "@/lib/format";
 import { PersonInsights } from "./person-insights";
 import { JailTimeline } from "./jail-timeline";
 import { EpisodeChart } from "./episode-chart";
@@ -44,12 +43,7 @@ export default async function PersonPage({ params }: Props) {
 
       <section className="drose-hero drose-hero-compact">
         <p className="drose-kicker">Person Profile</p>
-        <div className="mb-3 flex flex-wrap items-center gap-3">
-          <TierBadge tier={person.recidivism_tier} />
-          <h1 className="drose-page-title">
-            Person {person.INMATEID}
-          </h1>
-        </div>
+        <h1 className="drose-page-title">Person {person.INMATEID}</h1>
         <p className="drose-lead">
           {person.total_admissions} admissions &middot;{" "}
           {person.race ?? "Unknown"} {person.sex ?? ""} &middot; b.
@@ -61,6 +55,9 @@ export default async function PersonPage({ params }: Props) {
           </span>
           <span>
             <strong>Last admission:</strong> {formatDate(person.last_admission)}
+          </span>
+          <span>
+            <strong>Tier:</strong> {tierLabel(person.recidivism_tier)}
           </span>
           {person.first_known_charge && (
             <span>

@@ -107,7 +107,7 @@ export function SearchFilterForm({ options, current }: Props) {
             </Link>
           )}
           <span className={`drose-status ${isPending ? "drose-status-pending" : ""}`}>
-            {isPending ? "Updating..." : "Ready"}
+            {isPending ? "Updating results" : "Filters are up to date"}
           </span>
         </div>
       </div>

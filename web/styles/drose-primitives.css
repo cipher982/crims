@@ -303,6 +303,18 @@
   margin-top: 6px;
 }
 
+.drose-summary-line {
+  max-width: 72ch;
+  margin: 0;
+  color: var(--drose-text-secondary);
+  font-size: 15px;
+  line-height: 1.8;
+}
+
+.drose-summary-line strong {
+  color: var(--drose-text);
+}
+
 .drose-inline-meta {
   display: flex;
   flex-wrap: wrap;
@@ -441,20 +453,14 @@
 }
 
 .drose-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.04);
+  display: inline;
   color: var(--drose-text-muted);
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .drose-status-pending {
   color: var(--drose-cyan);
-  border-color: rgba(6, 182, 212, 0.2);
-  background: rgba(6, 182, 212, 0.08);
 }
 
 .drose-control-grid {
@@ -580,6 +586,72 @@
   color: var(--drose-text-secondary);
   font-size: 13px;
   line-height: 1.6;
+}
+
+.drose-article-list {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 14px;
+  color: var(--drose-text-muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.drose-article-list li strong {
+  color: var(--drose-text);
+}
+
+.drose-article-list li code,
+.drose-file-name {
+  font-family: var(--drose-font-mono);
+  font-size: 13px;
+  color: var(--drose-text);
+}
+
+.drose-plain-list {
+  display: grid;
+  gap: 16px;
+}
+
+.drose-plain-item {
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drose-plain-item:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.drose-plain-item-title {
+  margin: 0;
+  color: var(--drose-text);
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.drose-plain-item-copy {
+  margin: 6px 0 0;
+  color: var(--drose-text-muted);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.drose-plain-item-meta {
+  margin: 6px 0 0;
+  color: var(--drose-text-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.drose-status-text {
+  color: var(--drose-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .drose-copy-grid {

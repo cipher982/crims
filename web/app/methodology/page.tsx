@@ -1,7 +1,5 @@
 import { connection } from "next/server";
 import Link from "next/link";
-import { MethodBadge } from "@/components/method-badge";
-import { StatsCard } from "@/components/stats-card";
 import { formatNumber } from "@/lib/format";
 import { getMethodStats } from "@/lib/queries";
 import {
@@ -14,6 +12,10 @@ import {
 } from "@/lib/research";
 
 export const metadata = { title: "Methodology - NYC CJ Explorer" };
+
+function confidenceLabel(status: "exact" | "candidate" | "mixed" | "unsupported") {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
 
 export default async function MethodologyPage() {
   await connection();
@@ -43,20 +45,16 @@ export default async function MethodologyPage() {
         </div>
       </section>
 
-      <div className="drose-stat-grid">
-        <StatsCard
-          label="Exact DOC People"
-          value={formatNumber(stats.uniquePeople)}
-        />
-        <StatsCard
-          label="Repeat Admissions"
-          value={`${formatNumber(stats.repeatPeople)} (${(stats.repeatRate * 100).toFixed(1)}%)`}
-        />
-        <StatsCard
-          label="Median Readmission Gap"
-          value={stats.medianGapDays != null ? `${Math.round(stats.medianGapDays)}d` : "—"}
-        />
-      </div>
+      <p className="drose-summary-line">
+        <strong>{formatNumber(stats.uniquePeople)}</strong> exact DOC people,
+        <strong>{` ${formatNumber(stats.repeatPeople)}`}</strong> with repeat
+        admissions ({(stats.repeatRate * 100).toFixed(1)}%), and a median
+        readmission gap of{" "}
+        <strong>
+          {stats.medianGapDays != null ? `${Math.round(stats.medianGapDays)}d` : "—"}
+        </strong>
+        .
+      </p>
 
       <section className="drose-copy-grid">
         <div className="drose-copy-section">
@@ -71,32 +69,25 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <div className="drose-doc-list">
-            <div className="drose-doc-item">
-              <h3 className="drose-doc-item-title">Exact DOC joins</h3>
-              <p className="drose-doc-item-copy">
-                DOC admissions and discharges join on <code>INMATEID + admit_date</code>,
-                which supports exact jail episode histories, repeat-admission
-                counts, and cohort return metrics.
-              </p>
-            </div>
-            <div className="drose-doc-item">
-              <h3 className="drose-doc-item-title">Candidate arrest bridge</h3>
-              <p className="drose-doc-item-copy">
-                The arrest bridge keeps only unique 1:1 matches after filtering
-                on same date, normalized sex, parsed penal code, and compatible
-                age bucket.
-              </p>
-            </div>
-            <div className="drose-doc-item">
-              <h3 className="drose-doc-item-title">Unsupported cross-stage claims</h3>
-              <p className="drose-doc-item-copy">
-                Public court bulk extracts are de-identified and public prison
-                releases are aggregate, so this site does not claim full
-                cross-stage identity resolution.
-              </p>
-            </div>
-          </div>
+          <ul className="drose-article-list">
+            <li>
+              <strong>Exact DOC joins.</strong> DOC admissions and discharges
+              join on <code>INMATEID + admit_date</code>, which supports exact
+              jail episode histories, repeat-admission counts, and cohort
+              return metrics.
+            </li>
+            <li>
+              <strong>Candidate arrest bridge.</strong> The arrest bridge keeps
+              only unique 1:1 matches after filtering on same date, normalized
+              sex, parsed penal code, and compatible age bucket.
+            </li>
+            <li>
+              <strong>Unsupported cross-stage claims.</strong> Public court bulk
+              extracts are de-identified and public prison releases are
+              aggregate, so this site does not claim full cross-stage identity
+              resolution.
+            </li>
+          </ul>
         </div>
 
         <div className="drose-copy-section">
@@ -110,20 +101,18 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <div className="drose-doc-list">
+          <div className="drose-plain-list">
             {CURRENT_APP_DATASETS.map((dataset) => (
-              <div key={dataset.name} className="drose-doc-item">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
-                    {dataset.name}
-                  </p>
-                  <MethodBadge status={dataset.confidence} />
-                </div>
-                <p className="drose-doc-item-copy">
+              <div key={dataset.name} className="drose-plain-item">
+                <p className="drose-plain-item-title">
+                  <span className="drose-file-name">{dataset.name}</span>
+                </p>
+                <p className="drose-plain-item-copy">
                   {dataset.method}
                 </p>
-                <p className="drose-doc-meta">
-                  {dataset.grain} · {dataset.usedFor}
+                <p className="drose-plain-item-meta">
+                  {confidenceLabel(dataset.confidence)}. {dataset.grain}. Used
+                  for {dataset.usedFor}
                 </p>
               </div>
             ))}
@@ -181,9 +170,7 @@ export default async function MethodologyPage() {
                 <tr key={row.join}>
                   <td>{row.join}</td>
                   <td className="drose-mono">{row.fields}</td>
-                  <td>
-                    <MethodBadge status={row.status} />
-                  </td>
+                  <td className="drose-status-text">{confidenceLabel(row.status)}</td>
                   <td>{row.supports}</td>
                   <td>{row.caveat}</td>
                 </tr>
@@ -251,17 +238,15 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <div className="drose-doc-list">
+          <div className="drose-plain-list">
             {BROADER_REPO_DATASETS.map((dataset) => (
-              <div key={dataset.name} className="drose-doc-item">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
-                    {dataset.name}
-                  </p>
-                  <MethodBadge status={dataset.confidence} />
-                </div>
-                <p className="drose-doc-item-copy">
-                  {dataset.method}
+              <div key={dataset.name} className="drose-plain-item">
+                <p className="drose-plain-item-title">
+                  <span className="drose-file-name">{dataset.name}</span>
+                </p>
+                <p className="drose-plain-item-copy">{dataset.method}</p>
+                <p className="drose-plain-item-meta">
+                  {confidenceLabel(dataset.confidence)}. {dataset.usedFor}
                 </p>
               </div>
             ))}

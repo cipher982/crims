@@ -1,6 +1,5 @@
 import { connection } from "next/server";
 import Link from "next/link";
-import { MethodBadge } from "@/components/method-badge";
 import { formatNumber } from "@/lib/format";
 import {
   CURRENT_APP_DATASETS,
@@ -12,6 +11,10 @@ import {
 } from "@/lib/research";
 
 export const metadata = { title: "Sources - NYC CJ Explorer" };
+
+function confidenceLabel(status: "exact" | "candidate" | "mixed" | "unsupported") {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
 
 export default async function SourcesPage() {
   await connection();
@@ -91,20 +94,15 @@ export default async function SourcesPage() {
               </p>
             </div>
           </div>
-          <div className="drose-doc-list">
+          <div className="drose-plain-list">
             {CURRENT_APP_DATASETS.map((dataset) => (
-              <div key={dataset.name} className="drose-doc-item">
-                <div className="flex flex-wrap items-center justify-between gap-3">
-                  <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
-                    {dataset.name}
-                  </p>
-                  <MethodBadge status={dataset.confidence} />
-                </div>
-                <p className="drose-doc-item-copy">
-                  {dataset.method}
+              <div key={dataset.name} className="drose-plain-item">
+                <p className="drose-plain-item-title">
+                  <span className="drose-file-name">{dataset.name}</span>
                 </p>
-                <p className="drose-doc-meta">
-                  Built by {dataset.builtBy}
+                <p className="drose-plain-item-copy">{dataset.method}</p>
+                <p className="drose-plain-item-meta">
+                  {confidenceLabel(dataset.confidence)}. Built by {dataset.builtBy}.
                 </p>
               </div>
             ))}
@@ -183,9 +181,7 @@ export default async function SourcesPage() {
                 <tr key={row.join}>
                   <td>{row.join}</td>
                   <td className="drose-mono">{row.fields}</td>
-                  <td>
-                    <MethodBadge status={row.status} />
-                  </td>
+                  <td className="drose-status-text">{confidenceLabel(row.status)}</td>
                   <td>{row.supports}</td>
                   <td>{row.caveat}</td>
                 </tr>

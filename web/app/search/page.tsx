@@ -1,8 +1,6 @@
 import { searchPersons, getSearchSummary, getFilterOptions } from "@/lib/queries";
-import { TierBadge } from "@/components/tier-badge";
 import { ClickableRow } from "@/components/clickable-row";
-import { StatsCard } from "@/components/stats-card";
-import { chargeLabel, formatDate } from "@/lib/format";
+import { chargeLabel, formatDate, tierLabel } from "@/lib/format";
 import type { SearchFilters } from "@/lib/types";
 import { SearchFilterForm } from "./search-filters";
 
@@ -64,17 +62,14 @@ export default async function SearchPage({ searchParams }: Props) {
         current={filters}
       />
 
-      <div className="drose-stat-grid">
-        <StatsCard label="People" value={Number(summary.count).toLocaleString()} />
-        <StatsCard
-          label="Avg Admissions"
-          value={summary.avg_admissions ? Number(summary.avg_admissions).toFixed(1) : "—"}
-        />
-        <StatsCard
-          label="Repeat Rate"
-          value={`${(repeatRate * 100).toFixed(1)}%`}
-        />
-      </div>
+      <p className="drose-summary-line">
+        <strong>{Number(summary.count).toLocaleString()}</strong> people match
+        the current filters. Average admissions are{" "}
+        <strong>
+          {summary.avg_admissions ? Number(summary.avg_admissions).toFixed(1) : "—"}
+        </strong>{" "}
+        and the repeat rate is <strong>{`${(repeatRate * 100).toFixed(1)}%`}</strong>.
+      </p>
 
       <section className="drose-panel">
         <div className="drose-section-header">
@@ -111,7 +106,7 @@ export default async function SearchPage({ searchParams }: Props) {
               <ClickableRow key={p.INMATEID} href={`/person/${p.INMATEID}`}>
                 <td className="drose-id-link">{p.INMATEID}</td>
                 <td className="drose-mono">{p.total_admissions}</td>
-                <td><TierBadge tier={p.recidivism_tier} /></td>
+                <td>{p.recidivism_tier ? tierLabel(p.recidivism_tier) : "—"}</td>
                 <td>{p.race ?? "—"}</td>
                 <td>{p.sex ?? "—"}</td>
                 <td>{p.approx_birth_year ?? "—"}</td>

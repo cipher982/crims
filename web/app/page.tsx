@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { TierBadge } from "@/components/tier-badge";
 import { ClickableRow } from "@/components/clickable-row";
 import { SimpleBarChart } from "@/components/charts/bar-chart";
 import { SimpleLineChart } from "@/components/charts/line-chart";
@@ -9,7 +8,7 @@ import {
   getReturnRateTrend,
   getTopRecidivists,
 } from "@/lib/queries";
-import { chargeLabel, formatDate } from "@/lib/format";
+import { chargeLabel, formatDate, tierLabel } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -82,31 +81,23 @@ export default async function Home() {
               </p>
             </div>
           </div>
-          <div className="drose-doc-list">
-            <div className="drose-doc-item">
-              <h3 className="drose-doc-item-title">Exact DOC histories</h3>
-              <p className="drose-doc-item-copy">
-                DOC person pages, episode counts, stay lengths, gap lengths, and
-                cohort return rates all come from exact joins inside the public
-                DOC feeds.
-              </p>
-            </div>
-            <div className="drose-doc-item">
-              <h3 className="drose-doc-item-title">Candidate arrest context</h3>
-              <p className="drose-doc-item-copy">
-                Arrest rows and map points are candidate matches only. They come
-                from a strict 1:1 bridge, not a full cross-system person key.
-              </p>
-            </div>
-            <div className="drose-doc-item">
-              <h3 className="drose-doc-item-title">Unsupported claims</h3>
-              <p className="drose-doc-item-copy">
-                Court outcomes, prison histories, parole, and citywide
-                multi-arrest identity resolution remain outside what public bulk
-                data can support here.
-              </p>
-            </div>
-          </div>
+          <ul className="drose-article-list">
+            <li>
+              <strong>Exact.</strong> DOC person pages, episode counts, stay
+              lengths, gap lengths, and cohort return rates come from exact
+              joins inside the public DOC feeds.
+            </li>
+            <li>
+              <strong>Candidate.</strong> Arrest rows and map points are
+              candidate matches only. They come from a strict 1:1 bridge, not a
+              full cross-system person key.
+            </li>
+            <li>
+              <strong>Unsupported.</strong> Court outcomes, prison histories,
+              parole, and citywide multi-arrest identity resolution remain
+              outside what public bulk data can support here.
+            </li>
+          </ul>
         </div>
 
         <div className="drose-copy-section">
@@ -121,20 +112,19 @@ export default async function Home() {
               </p>
             </div>
           </div>
-          <div className="space-y-3 text-[15px] leading-7 text-[var(--drose-text-muted)]">
-            <p className="m-0">
-              Core runtime inputs: DOC admissions, DOC discharges, DOC cohort
-              outcomes, and the candidate arrest-DOC bridge.
-            </p>
-            <p className="m-0">
-              Broader repo inputs: NYPD complaints, arrests, summonses, and
-              Census geography enrichment for the multi-year public event panel.
-            </p>
-            <p className="m-0">
-              The detailed build notes now live on dedicated site pages so the
-              methodology stays visible instead of buried in repo docs.
-            </p>
-          </div>
+          <p className="drose-summary-line">
+            Core runtime inputs are DOC admissions, DOC discharges, DOC cohort
+            outcomes, and the candidate arrest-DOC bridge.
+          </p>
+          <p className="drose-summary-line">
+            The broader repo also includes NYPD complaints, arrests, summonses,
+            and Census geography enrichment for the multi-year public event
+            panel.
+          </p>
+          <p className="drose-summary-line">
+            The detailed build notes live on dedicated site pages so the
+            methodology stays visible instead of buried in repo docs.
+          </p>
           <div className="drose-actions">
             <Link href="/methodology" className="drose-button drose-button-primary">
               Read Methodology
@@ -181,7 +171,7 @@ export default async function Home() {
                 <ClickableRow key={p.INMATEID} href={`/person/${p.INMATEID}`}>
                   <td className="drose-id-link">{p.INMATEID}</td>
                   <td className="drose-mono font-semibold">{p.total_admissions}</td>
-                  <td><TierBadge tier={p.recidivism_tier} /></td>
+                  <td>{p.recidivism_tier ? tierLabel(p.recidivism_tier) : "—"}</td>
                   <td>{p.race ?? "—"}</td>
                   <td>{p.sex ?? "—"}</td>
                   <td>{p.approx_birth_year ?? "—"}</td>
