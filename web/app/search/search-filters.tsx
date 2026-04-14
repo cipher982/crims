@@ -91,29 +91,30 @@ export function SearchFilterForm({ options, current }: Props) {
     current.dir !== "desc";
 
   return (
-    <div className="mb-4 rounded-lg border border-gray-200 bg-white p-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-sm text-gray-600">
+    <div className="drose-panel drose-form-panel">
+      <div className="drose-form-toolbar">
+        <p className="drose-form-toolbar-copy">
           Filters live in the URL so views stay shareable and restorable. Text
           inputs update after a short pause.
         </p>
-        <div className="flex items-center gap-3">
+        <div className="drose-form-toolbar-meta">
           {hasActiveFilters && (
             <Link
               href="/search"
-              className="text-xs font-medium text-gray-500 hover:text-gray-700"
+              className="drose-subtle-link"
             >
               Clear filters
             </Link>
           )}
-          <span className="text-xs text-gray-400">
+          <span className={`drose-status ${isPending ? "drose-status-pending" : ""}`}>
             {isPending ? "Updating..." : "Ready"}
           </span>
         </div>
       </div>
-      <div className="flex flex-wrap gap-3">
+
+      <div className="drose-control-grid">
         <select
-          className="rounded border border-gray-300 px-3 py-1.5 text-sm"
+          className="drose-control"
           value={current.tier ?? ""}
           onChange={(e) => update("tier", e.target.value)}
         >
@@ -126,7 +127,7 @@ export function SearchFilterForm({ options, current }: Props) {
         </select>
 
         <select
-          className="rounded border border-gray-300 px-3 py-1.5 text-sm"
+          className="drose-control"
           value={current.race ?? ""}
           onChange={(e) => update("race", e.target.value)}
         >
@@ -139,7 +140,7 @@ export function SearchFilterForm({ options, current }: Props) {
         </select>
 
         <select
-          className="rounded border border-gray-300 px-3 py-1.5 text-sm"
+          className="drose-control"
           value={current.sex ?? ""}
           onChange={(e) => update("sex", e.target.value)}
         >
@@ -153,7 +154,7 @@ export function SearchFilterForm({ options, current }: Props) {
 
         <input
           type="number"
-          className="w-24 rounded border border-gray-300 px-3 py-1.5 text-sm"
+          className="drose-control w-28"
           placeholder="Min admits"
           value={draftMinAdmissions}
           onChange={(e) => setDraftMinAdmissions(e.target.value)}
@@ -162,14 +163,14 @@ export function SearchFilterForm({ options, current }: Props) {
 
         <input
           type="search"
-          className="w-36 rounded border border-gray-300 px-3 py-1.5 text-sm"
+          className="drose-control w-44"
           placeholder="Charge code"
           value={draftCharge}
           onChange={(e) => setDraftCharge(e.target.value)}
         />
 
         <select
-          className="rounded border border-gray-300 px-3 py-1.5 text-sm"
+          className="drose-control"
           value={current.sort ?? "total_admissions"}
           onChange={(e) => update("sort", e.target.value)}
         >
@@ -181,7 +182,7 @@ export function SearchFilterForm({ options, current }: Props) {
         </select>
 
         <select
-          className="rounded border border-gray-300 px-3 py-1.5 text-sm"
+          className="drose-control"
           value={current.dir ?? "desc"}
           onChange={(e) => update("dir", e.target.value)}
         >

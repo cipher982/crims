@@ -22,22 +22,21 @@ export function JailTimeline({ episodes }: { episodes: Episode[] }) {
   const years = getYearMarkers(startDate, endDate);
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5">
+    <div className="drose-panel">
       <div className="mb-1 flex items-baseline justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="drose-panel-title">
           Incarceration Timeline
         </h2>
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-[var(--drose-text-muted)]">
           {fmt(startDate)} — {fmt(endDate)}
         </span>
       </div>
-      <p className="mb-4 text-sm text-gray-500">
+      <p className="mb-4 text-sm text-[var(--drose-text-muted)]">
         {pctIncarcerated.toFixed(1)}% of time incarcerated since first
         admission ({totalDays.toLocaleString()} days tracked)
       </p>
 
-      {/* The timeline bar */}
-      <div className="relative h-10 w-full rounded bg-gray-100 overflow-hidden">
+      <div className="relative h-10 w-full overflow-hidden rounded-full border border-white/8 bg-white/6">
         {segments.map((seg, i) => (
           <div
             key={i}
@@ -45,15 +44,17 @@ export function JailTimeline({ episodes }: { episodes: Episode[] }) {
             style={{
               left: `${seg.startPct}%`,
               width: `${Math.max(seg.widthPct, 0.3)}%`,
-              backgroundColor: seg.type === "jail" ? "#dc2626" : "transparent",
+              background:
+                seg.type === "jail"
+                  ? "linear-gradient(180deg, #fb7185 0%, #be123c 100%)"
+                  : "transparent",
             }}
             title={seg.tooltip}
           />
         ))}
       </div>
 
-      {/* Year markers */}
-      <div className="relative mt-1 h-4 w-full text-[10px] text-gray-400">
+      <div className="relative mt-2 h-4 w-full text-[10px] text-[var(--drose-text-muted)]">
         {years.map((y) => (
           <span
             key={y.year}
@@ -65,14 +66,13 @@ export function JailTimeline({ episodes }: { episodes: Episode[] }) {
         ))}
       </div>
 
-      {/* Legend */}
-      <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
+      <div className="mt-3 flex items-center gap-4 text-xs text-[var(--drose-text-muted)]">
         <span className="flex items-center gap-1">
-          <span className="inline-block h-3 w-3 rounded-sm bg-red-600" /> In
+          <span className="inline-block h-3 w-3 rounded-sm bg-rose-400" /> In
           jail
         </span>
         <span className="flex items-center gap-1">
-          <span className="inline-block h-3 w-3 rounded-sm bg-gray-100 border border-gray-300" />{" "}
+          <span className="inline-block h-3 w-3 rounded-sm border border-white/10 bg-white/6" />{" "}
           Free
         </span>
         <span>

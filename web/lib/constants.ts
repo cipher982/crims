@@ -23,10 +23,10 @@ export const CHARGE_LABELS: Record<string, string> = {
 };
 
 export const TIER_BG: Record<string, string> = {
-  single: "bg-gray-100 text-gray-700",
-  low_repeat: "bg-blue-100 text-blue-700",
-  moderate_repeat: "bg-amber-100 text-amber-700",
-  high_repeat: "bg-red-100 text-red-700",
+  single: "drose-badge-single",
+  low_repeat: "drose-badge-low-repeat",
+  moderate_repeat: "drose-badge-moderate-repeat",
+  high_repeat: "drose-badge-high-repeat",
 };
 
 export const TIER_LABELS: Record<string, string> = {

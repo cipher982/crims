@@ -32,101 +32,108 @@ export default async function Home() {
   }));
 
   return (
-    <div>
-      {/* Header with key stats inline */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          NYC Criminal Justice Explorer
-        </h1>
-        <p className="mt-1 text-sm text-gray-600">
-          {Number(stats.uniquePeople).toLocaleString()} people
-          {" · "}
-          {Number(stats.jailEpisodes).toLocaleString()} jail episodes
-          {" · "}
-          {(stats.repeatRate * 100).toFixed(1)}% returned 2+ times
-          {" · "}
-          {(stats.returnRate1yr * 100).toFixed(1)}% returned within 1 year
+    <div className="drose-page-stack">
+      <section className="drose-hero">
+        <p className="drose-kicker">Public NYC DOC Research Explorer</p>
+        <h1 className="drose-hero-title">NYC Criminal Justice Explorer</h1>
+        <p className="drose-lead">
+          Person-centric exploration of NYC DOC admissions, repeat incarceration,
+          charge patterns, and the cleanest public arrest-to-jail bridge subset.
         </p>
-      </div>
 
-      {/* Action buttons */}
-      <div className="mb-6 flex gap-3">
-        <Link
-          href="/search"
-          className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
-        >
-          Search All People
-        </Link>
-        <Link
-          href="/random-person"
-          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
-          Random Person
-        </Link>
-      </div>
+        <div className="drose-metric-row">
+          <span className="drose-metric-chip">
+            <strong>{Number(stats.uniquePeople).toLocaleString()}</strong> people
+          </span>
+          <span className="drose-metric-chip">
+            <strong>{Number(stats.jailEpisodes).toLocaleString()}</strong> jail episodes
+          </span>
+          <span className="drose-metric-chip">
+            <strong>{(stats.repeatRate * 100).toFixed(1)}%</strong> returned 2+ times
+          </span>
+          <span className="drose-metric-chip">
+            <strong>{(stats.returnRate1yr * 100).toFixed(1)}%</strong> within 1 year
+          </span>
+        </div>
 
-      {/* Top recidivists table — the hero */}
-      <div className="mb-8">
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">
-          Top Recidivists
-        </h2>
-        <p className="mb-2 text-sm text-gray-500">
-          People with the most jail admissions. Click any row for full profile.
-        </p>
-        <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-          <table className="min-w-full divide-y divide-gray-200 text-sm">
-            <thead className="bg-gray-50">
+        <div className="drose-actions">
+          <Link href="/search" className="drose-button drose-button-primary">
+            Search All People
+          </Link>
+          <Link
+            href="/random-person"
+            className="drose-button drose-button-secondary"
+          >
+            Random Person
+          </Link>
+        </div>
+      </section>
+
+      <section className="drose-panel">
+        <div className="drose-section-header">
+          <div>
+            <p className="drose-kicker">High-Signal Profiles</p>
+            <h2 className="drose-section-title">Top Recidivists</h2>
+            <p className="drose-section-copy">
+              People with the most jail admissions. Click any row for the full timeline,
+              gap structure, linked arrests, and person-level history.
+            </p>
+          </div>
+        </div>
+
+        <div className="drose-table-wrap">
+          <table className="drose-table">
+            <thead>
               <tr>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">INMATEID</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">Admissions</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">Tier</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">Race</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">Sex</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">Birth Year</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">First Admission</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">Last Admission</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">Avg Stay</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-500">First Charge</th>
+                <th>INMATEID</th>
+                <th>Admissions</th>
+                <th>Tier</th>
+                <th>Race</th>
+                <th>Sex</th>
+                <th>Birth Year</th>
+                <th>First Admission</th>
+                <th>Last Admission</th>
+                <th>Avg Stay</th>
+                <th>First Charge</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 text-gray-800">
+            <tbody>
               {topPeople.map((p) => (
-                <ClickableRow key={p.INMATEID} href={`/person/${p.INMATEID}`} className="hover:bg-blue-50">
-                  <td className="px-3 py-2 font-medium text-blue-600">{p.INMATEID}</td>
-                  <td className="px-3 py-2 font-mono font-semibold">{p.total_admissions}</td>
-                  <td className="px-3 py-2"><TierBadge tier={p.recidivism_tier} /></td>
-                  <td className="px-3 py-2">{p.race ?? "—"}</td>
-                  <td className="px-3 py-2">{p.sex ?? "—"}</td>
-                  <td className="px-3 py-2">{p.approx_birth_year ?? "—"}</td>
-                  <td className="px-3 py-2 font-mono">{formatDate(p.first_admission)}</td>
-                  <td className="px-3 py-2 font-mono">{formatDate(p.last_admission)}</td>
-                  <td className="px-3 py-2">
+                <ClickableRow key={p.INMATEID} href={`/person/${p.INMATEID}`}>
+                  <td className="drose-id-link">{p.INMATEID}</td>
+                  <td className="drose-mono font-semibold">{p.total_admissions}</td>
+                  <td><TierBadge tier={p.recidivism_tier} /></td>
+                  <td>{p.race ?? "—"}</td>
+                  <td>{p.sex ?? "—"}</td>
+                  <td>{p.approx_birth_year ?? "—"}</td>
+                  <td className="drose-mono">{formatDate(p.first_admission)}</td>
+                  <td className="drose-mono">{formatDate(p.last_admission)}</td>
+                  <td>
                     {p.avg_stay_days != null
                       ? `${Math.round(Number(p.avg_stay_days))}d`
                       : "—"}
                   </td>
-                  <td className="px-3 py-2">{chargeLabel(p.first_known_charge)}</td>
+                  <td>{chargeLabel(p.first_known_charge)}</td>
                 </ClickableRow>
               ))}
             </tbody>
           </table>
         </div>
-      </div>
+      </section>
 
-      {/* Charts — secondary, below the fold */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="drose-panel">
           <SimpleBarChart data={admData} title="Admissions by Year" />
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="drose-panel">
           <SimpleLineChart
             data={trendData}
             title="1-Year Return Rate"
-            color="#ef4444"
+            color="#ec4899"
             pct
           />
         </div>
-      </div>
+      </section>
     </div>
   );
 }

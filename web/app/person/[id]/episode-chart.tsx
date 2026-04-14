@@ -52,47 +52,54 @@ export function EpisodeChart({ episodes, avgStay }: Props) {
         : "Stay length is stable";
   const trendColor =
     avgSecond > avgFirst * 1.5
-      ? "text-red-600"
+      ? "text-rose-300"
       : avgSecond < avgFirst * 0.6
-        ? "text-green-600"
-        : "text-gray-500";
+        ? "text-emerald-300"
+        : "text-[var(--drose-text-muted)]";
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-5">
+    <div className="drose-panel">
       <div className="mb-1 flex items-baseline justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="drose-panel-title">
           Episode Breakdown
         </h2>
         <span className={`text-sm font-medium ${trendColor}`}>{trend}</span>
       </div>
-      <p className="mb-4 text-sm text-gray-500">
+      <p className="mb-4 text-sm text-[var(--drose-text-muted)]">
         Each episode: red = days in jail, gray = days free before next arrest
       </p>
 
       <ResponsiveContainer width="100%" height={220}>
         <BarChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} />
+          <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="3 3" vertical={false} />
           <XAxis
             dataKey="name"
-            tick={{ fontSize: 10 }}
+            tick={{ fontSize: 10, fill: "#8e93a4" }}
+            axisLine={{ stroke: "rgba(255,255,255,0.08)" }}
+            tickLine={false}
             interval={data.length > 30 ? Math.floor(data.length / 15) : 0}
           />
-          <YAxis tick={{ fontSize: 11 }} label={{ value: "days", angle: -90, position: "insideLeft", fontSize: 11, fill: "#9ca3af" }} />
+          <YAxis
+            tick={{ fontSize: 11, fill: "#8e93a4" }}
+            axisLine={false}
+            tickLine={false}
+            label={{ value: "days", angle: -90, position: "insideLeft", fontSize: 11, fill: "#8e93a4" }}
+          />
           <Tooltip
             content={({ active, payload }) => {
               if (!active || !payload?.length) return null;
               const d = payload[0]?.payload;
               return (
-                <div className="rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs shadow-lg">
-                  <div className="font-semibold text-gray-900">
+                <div className="rounded-xl border border-[rgba(99,102,241,0.2)] bg-[rgba(10,10,18,0.96)] px-3 py-2 text-xs shadow-lg shadow-black/40">
+                  <div className="font-semibold text-white">
                     Episode {d.name} — {d.date}
                   </div>
-                  <div className="text-red-600">{d.stay}d in jail</div>
+                  <div className="text-rose-300">{d.stay}d in jail</div>
                   {d.gap > 0 && (
-                    <div className="text-gray-500">{d.gap}d free after</div>
+                    <div className="text-[var(--drose-text-muted)]">{d.gap}d free after</div>
                   )}
                   {d.charge && (
-                    <div className="text-gray-600">
+                    <div className="text-[var(--drose-text-secondary)]">
                       {chargeLabel(d.charge)}
                     </div>
                   )}
@@ -101,7 +108,7 @@ export function EpisodeChart({ episodes, avgStay }: Props) {
             }}
           />
           <Legend
-            wrapperStyle={{ fontSize: 12 }}
+            wrapperStyle={{ fontSize: 12, color: "#c2c5cf" }}
             formatter={(value: string) =>
               value === "stay" ? "In jail" : "Free after"
             }
@@ -109,26 +116,26 @@ export function EpisodeChart({ episodes, avgStay }: Props) {
           <Bar
             dataKey="stay"
             stackId="a"
-            fill="#dc2626"
+            fill="#fb7185"
             radius={[0, 0, 0, 0]}
             name="stay"
           />
           <Bar
             dataKey="gap"
             stackId="a"
-            fill="#e5e7eb"
+            fill="rgba(255,255,255,0.18)"
             radius={[3, 3, 0, 0]}
             name="gap"
           />
           {avgStay && (
             <ReferenceLine
               y={Math.round(avgStay)}
-              stroke="#dc2626"
+              stroke="#fb7185"
               strokeDasharray="4 4"
               label={{
                 value: `avg stay ${Math.round(avgStay)}d`,
                 fontSize: 10,
-                fill: "#dc2626",
+                fill: "#fb7185",
                 position: "right",
               }}
             />

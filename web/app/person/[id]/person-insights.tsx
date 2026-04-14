@@ -11,16 +11,13 @@ export function PersonInsights({ person, episodes }: Props) {
   if (!stats) return null;
 
   return (
-    <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+    <div className="drose-stat-grid drose-person-stat-grid">
       {stats.map((s) => (
-        <div
-          key={s.label}
-          className="rounded-lg border border-gray-200 bg-white p-4"
-        >
-          <div className="text-2xl font-bold text-gray-900">{s.value}</div>
-          <div className="mt-0.5 text-xs text-gray-500">{s.label}</div>
+        <div key={s.label} className="drose-stat-card">
+          <div className="drose-stat-value">{s.value}</div>
+          <div className="drose-stat-label">{s.label}</div>
           {s.detail && (
-            <div className="mt-1 text-xs text-gray-400">{s.detail}</div>
+            <div className="drose-stat-detail">{s.detail}</div>
           )}
         </div>
       ))}

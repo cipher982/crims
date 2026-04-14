@@ -48,8 +48,15 @@ export default async function SearchPage({ searchParams }: Props) {
     summary.count > 0 ? summary.repeaters / summary.count : 0;
 
   return (
-    <div>
-      <h1 className="mb-4 text-2xl font-bold text-gray-900">Search People</h1>
+    <div className="drose-page-stack">
+      <section className="drose-hero drose-hero-compact">
+        <p className="drose-kicker">Query The Public Dataset</p>
+        <h1 className="drose-page-title">Search People</h1>
+        <p className="drose-lead">
+          Filter by recidivism tier, demographics, admissions, and charge code.
+          Every view is URL-backed so the state stays shareable and restorable.
+        </p>
+      </section>
 
       <SearchFilterForm
         key={JSON.stringify(filters)}
@@ -57,7 +64,7 @@ export default async function SearchPage({ searchParams }: Props) {
         current={filters}
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="drose-stat-grid">
         <StatsCard label="People" value={Number(summary.count).toLocaleString()} />
         <StatsCard
           label="Avg Admissions"
@@ -69,49 +76,59 @@ export default async function SearchPage({ searchParams }: Props) {
         />
       </div>
 
-      <p className="mb-2 text-sm text-gray-500">
-        Click any row to view details. Showing {persons.length}
-        {summary.count > 500 ? ` of ${Number(summary.count).toLocaleString()}` : ""}.
-      </p>
+      <section className="drose-panel">
+        <div className="drose-section-header">
+          <div>
+            <p className="drose-kicker">Result Set</p>
+            <h2 className="drose-section-title">Matching People</h2>
+            <p className="drose-section-copy">
+              Click any row to view details. Showing {persons.length}
+              {summary.count > 500
+                ? ` of ${Number(summary.count).toLocaleString()}`
+                : ""}.
+            </p>
+          </div>
+        </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-        <table className="min-w-full divide-y divide-gray-200 text-sm">
-          <thead className="bg-gray-50">
+        <div className="drose-table-wrap">
+          <table className="drose-table">
+            <thead>
             <tr>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">INMATEID</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">Admissions</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">Tier</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">Race</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">Sex</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">Birth Year</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">First Admission</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">Last Admission</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">Avg Stay</th>
-              <th className="px-3 py-2 text-left font-medium text-gray-500">First Charge</th>
+              <th>INMATEID</th>
+              <th>Admissions</th>
+              <th>Tier</th>
+              <th>Race</th>
+              <th>Sex</th>
+              <th>Birth Year</th>
+              <th>First Admission</th>
+              <th>Last Admission</th>
+              <th>Avg Stay</th>
+              <th>First Charge</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-gray-100 text-gray-800">
+          <tbody>
             {persons.map((p) => (
-              <ClickableRow key={p.INMATEID} href={`/person/${p.INMATEID}`} className="hover:bg-blue-50">
-                <td className="px-3 py-2 font-medium text-blue-600">{p.INMATEID}</td>
-                <td className="px-3 py-2 font-mono">{p.total_admissions}</td>
-                <td className="px-3 py-2"><TierBadge tier={p.recidivism_tier} /></td>
-                <td className="px-3 py-2">{p.race ?? "—"}</td>
-                <td className="px-3 py-2">{p.sex ?? "—"}</td>
-                <td className="px-3 py-2">{p.approx_birth_year ?? "—"}</td>
-                <td className="px-3 py-2 font-mono">{formatDate(p.first_admission)}</td>
-                <td className="px-3 py-2 font-mono">{formatDate(p.last_admission)}</td>
-                <td className="px-3 py-2">
+              <ClickableRow key={p.INMATEID} href={`/person/${p.INMATEID}`}>
+                <td className="drose-id-link">{p.INMATEID}</td>
+                <td className="drose-mono">{p.total_admissions}</td>
+                <td><TierBadge tier={p.recidivism_tier} /></td>
+                <td>{p.race ?? "—"}</td>
+                <td>{p.sex ?? "—"}</td>
+                <td>{p.approx_birth_year ?? "—"}</td>
+                <td className="drose-mono">{formatDate(p.first_admission)}</td>
+                <td className="drose-mono">{formatDate(p.last_admission)}</td>
+                <td>
                   {p.avg_stay_days != null
                     ? `${Math.round(Number(p.avg_stay_days))}d`
                     : "—"}
                 </td>
-                <td className="px-3 py-2">{chargeLabel(p.first_known_charge)}</td>
+                <td>{chargeLabel(p.first_known_charge)}</td>
               </ClickableRow>
             ))}
           </tbody>
         </table>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

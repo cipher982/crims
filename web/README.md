@@ -60,6 +60,23 @@ uv run python scripts/build_arrest_doc_bridge.py
 - Leaflet marker assets are vendored in `public/leaflet/` so the map does not
   depend on a third-party CDN at runtime.
 
+## Theme Layer
+
+The current visual system is intentionally split into an extraction boundary so
+the `drose.io` look can be reused elsewhere without another large refactor.
+
+- `styles/drose-theme.css`
+  - token layer derived from the live `drose.io` palette and background system
+  - fonts, colors, shell sizing, motion, shadows, grid/nebula/particle layers
+- `styles/drose-primitives.css`
+  - reusable surface primitives used by the app shell and pages
+  - nav, hero, glass panel, stat card, button, form control, badge, and table
+    treatments
+
+The goal is to keep these files token-first and primitive-first so they can be
+lifted into a separate shared package once the contract stabilizes. For now the
+shared API is the CSS classes and variables, not a React component library.
+
 ## Stack
 
 - Next.js App Router

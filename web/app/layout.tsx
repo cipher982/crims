@@ -1,21 +1,25 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { Nav } from "@/components/nav";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "NYC Criminal Justice Explorer",
   description: "Person-centric exploration of NYC DOC jail recidivism data",
+};
+
+export const viewport: Viewport = {
+  themeColor: "#030305",
 };
 
 export default function RootLayout({
@@ -26,12 +30,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased bg-gray-50`}
-      style={{ colorScheme: "light" }}
+      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-gray-50 text-gray-900">
+      <body className="min-h-full">
+        <div className="drose-particle-bg" aria-hidden="true" />
         <Nav />
-        <main className="mx-auto w-full max-w-7xl flex-1 px-4 py-6">
+        <main className="drose-shell">
           {children}
         </main>
       </body>

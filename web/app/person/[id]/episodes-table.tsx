@@ -32,7 +32,7 @@ export function EpisodesTable({ episodes }: { episodes: Episode[] }) {
   function header(label: string, key: SortKey) {
     return (
       <th
-        className="cursor-pointer select-none px-3 py-2 text-left font-medium text-gray-500 hover:text-gray-700"
+        className="cursor-pointer select-none hover:text-[var(--drose-text-secondary)]"
         onClick={() => toggleSort(key)}
       >
         {label}
@@ -44,31 +44,31 @@ export function EpisodesTable({ episodes }: { episodes: Episode[] }) {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-      <table className="min-w-full divide-y divide-gray-200 text-sm">
-        <thead className="bg-gray-50">
+    <div className="drose-table-wrap">
+      <table className="drose-table">
+        <thead>
           <tr>
             {header("#", "episode_num")}
             {header("Admitted", "admit_date")}
-            <th className="px-3 py-2 text-left font-medium text-gray-500">Discharged</th>
+            <th>Discharged</th>
             {header("Stay (days)", "stay_days")}
             {header("Gap (days)", "gap_days")}
             {header("Charge", "top_charge")}
-            <th className="px-3 py-2 text-left font-medium text-gray-500">Status</th>
-            <th className="px-3 py-2 text-left font-medium text-gray-500">Age</th>
+            <th>Status</th>
+            <th>Age</th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100 text-gray-800">
+        <tbody>
           {sorted.map((e) => (
-            <tr key={e.episode_num} className="hover:bg-blue-50">
-              <td className="px-3 py-2 font-mono text-gray-500">{e.episode_num}</td>
-              <td className="px-3 py-2 font-mono">{formatDate(e.admit_date)}</td>
-              <td className="px-3 py-2 font-mono">{formatDate(e.discharge_date)}</td>
-              <td className="px-3 py-2">{e.stay_days ?? "—"}</td>
-              <td className="px-3 py-2">{e.gap_days ?? "—"}</td>
-              <td className="px-3 py-2">{chargeLabel(e.top_charge)}</td>
-              <td className="px-3 py-2">{e.status_code ?? "—"}</td>
-              <td className="px-3 py-2">{e.age_at_discharge ?? "—"}</td>
+            <tr key={e.episode_num}>
+              <td className="drose-mono text-[var(--drose-text-muted)]">{e.episode_num}</td>
+              <td className="drose-mono">{formatDate(e.admit_date)}</td>
+              <td className="drose-mono">{formatDate(e.discharge_date)}</td>
+              <td>{e.stay_days ?? "—"}</td>
+              <td>{e.gap_days ?? "—"}</td>
+              <td>{chargeLabel(e.top_charge)}</td>
+              <td>{e.status_code ?? "—"}</td>
+              <td>{e.age_at_discharge ?? "—"}</td>
             </tr>
           ))}
         </tbody>

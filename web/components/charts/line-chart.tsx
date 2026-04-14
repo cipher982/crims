@@ -21,7 +21,7 @@ interface Props {
 export function SimpleLineChart({
   data,
   title,
-  color = "#3b82f6",
+  color = "#ec4899",
   pct = false,
 }: Props) {
   const fmt = pct ? (v: number) => `${(v * 100).toFixed(0)}%` : undefined;
@@ -38,19 +38,41 @@ export function SimpleLineChart({
 
   return (
     <div>
-      <h3 className="mb-2 text-sm font-medium text-gray-700">{title}</h3>
+      <h3 className="mb-3 text-sm font-semibold tracking-[0.14em] uppercase text-[var(--drose-text-muted)]">
+        {title}
+      </h3>
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-          <YAxis tickFormatter={fmt} />
-          <Tooltip formatter={(value) => formatTooltipValue(value)} />
+          <CartesianGrid stroke="rgba(255,255,255,0.08)" strokeDasharray="3 3" />
+          <XAxis
+            dataKey="name"
+            tick={{ fill: "#8e93a4", fontSize: 11 }}
+            axisLine={{ stroke: "rgba(255,255,255,0.08)" }}
+            tickLine={false}
+          />
+          <YAxis
+            tickFormatter={fmt}
+            tick={{ fill: "#8e93a4", fontSize: 11 }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip
+            formatter={(value) => formatTooltipValue(value)}
+            contentStyle={{
+              background: "rgba(10,10,18,0.96)",
+              border: "1px solid rgba(99,102,241,0.2)",
+              borderRadius: 12,
+              color: "#fafafa",
+              boxShadow: "0 12px 30px rgba(0,0,0,0.35)",
+            }}
+          />
           <Line
             type="monotone"
             dataKey="value"
             stroke={color}
             strokeWidth={2}
-            dot={{ r: 3 }}
+            dot={{ r: 3, fill: color, stroke: "#030305", strokeWidth: 2 }}
+            activeDot={{ r: 5, fill: color, stroke: "#fafafa", strokeWidth: 1 }}
           />
         </LineChart>
       </ResponsiveContainer>

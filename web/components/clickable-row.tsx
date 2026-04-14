@@ -16,7 +16,7 @@ export function ClickableRow({
     <tr
       tabIndex={0}
       role="link"
-      className={`cursor-pointer ${className}`}
+      className={`drose-row-link cursor-pointer ${className}`}
       onClick={() => router.push(href)}
       onKeyDown={(event) => {
         if (event.key === "Enter" || event.key === " ") {

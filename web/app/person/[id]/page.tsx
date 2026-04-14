@@ -34,65 +34,61 @@ export default async function PersonPage({ params }: Props) {
   );
 
   return (
-    <div>
+    <div className="drose-page-stack">
       <Link
         href="/search"
-        className="mb-4 inline-block text-sm text-blue-600 hover:text-blue-800"
+        className="drose-back-link"
       >
         &larr; Back to search
       </Link>
 
-      {/* Profile header */}
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-6">
-        <div className="flex items-center gap-3 mb-2">
+      <section className="drose-hero drose-hero-compact">
+        <p className="drose-kicker">Person Profile</p>
+        <div className="mb-3 flex flex-wrap items-center gap-3">
           <TierBadge tier={person.recidivism_tier} />
-          <h1 className="text-xl font-bold text-gray-900">
+          <h1 className="drose-page-title">
             Person {person.INMATEID}
           </h1>
         </div>
-        <p className="text-gray-600">
+        <p className="drose-lead">
           {person.total_admissions} admissions &middot;{" "}
           {person.race ?? "Unknown"} {person.sex ?? ""} &middot; b.
           ~{person.approx_birth_year ?? "?"}
         </p>
-        <div className="mt-2 flex flex-wrap gap-x-6 gap-y-1 text-sm text-gray-500">
+        <div className="drose-inline-meta">
           <span>
-            First admission: <span className="text-gray-700">{formatDate(person.first_admission)}</span>
+            <strong>First admission:</strong> {formatDate(person.first_admission)}
           </span>
           <span>
-            Last admission: <span className="text-gray-700">{formatDate(person.last_admission)}</span>
+            <strong>Last admission:</strong> {formatDate(person.last_admission)}
           </span>
           {person.first_known_charge && (
             <span>
-              First charge: <span className="text-gray-700">{chargeLabel(person.first_known_charge)}</span>
+              <strong>First charge:</strong> {chargeLabel(person.first_known_charge)}
             </span>
           )}
           {person.last_known_charge && person.last_known_charge !== person.first_known_charge && (
             <span>
-              Last charge: <span className="text-gray-700">{chargeLabel(person.last_known_charge)}</span>
+              <strong>Last charge:</strong> {chargeLabel(person.last_known_charge)}
             </span>
           )}
         </div>
-      </div>
+      </section>
 
-      {/* Key insights — the high-signal numbers */}
-      <div className="mb-6">
+      <section>
         <PersonInsights person={person} episodes={episodes} />
-      </div>
+      </section>
 
-      {/* Incarceration timeline — the duty cycle */}
-      <div className="mb-6">
+      <section>
         <JailTimeline episodes={episodes} />
-      </div>
+      </section>
 
-      {/* Episode breakdown — stay durations + gaps stacked */}
-      <div className="mb-6">
+      <section>
         <EpisodeChart episodes={episodes} avgStay={person.avg_stay_days} />
-      </div>
+      </section>
 
-      {/* Arrest geography */}
       {bridgePoints.length > 0 && (
-        <div className="mb-6 rounded-lg border border-gray-200 overflow-hidden">
+        <section className="drose-panel overflow-hidden !p-0">
           <ArrestMap
             points={bridgePoints.map((b) => ({
               lat: b.lat!,
@@ -100,55 +96,64 @@ export default async function PersonPage({ params }: Props) {
               label: `${formatDate(b.arrest_date)} — ${chargeLabel(b.penal_code)} (${b.arrest_boro})`,
             }))}
           />
-        </div>
+        </section>
       )}
 
-      {/* Episodes table — the raw data, collapsed by default feel */}
-      <div className="mb-6">
-        <h2 className="mb-3 text-lg font-semibold text-gray-900">
-          All Episodes ({episodes.length})
-        </h2>
+      <section className="drose-panel">
+        <div className="drose-section-header">
+          <div>
+            <p className="drose-kicker">Raw Episode History</p>
+            <h2 className="drose-section-title">
+              All Episodes ({episodes.length})
+            </h2>
+          </div>
+        </div>
         <EpisodesTable episodes={episodes} />
-      </div>
+      </section>
 
-      {/* Bridge arrest table */}
       {bridge.length > 0 && (
-        <div className="mb-6">
-          <h2 className="mb-2 text-lg font-semibold text-gray-900">
-            Linked Arrests ({bridge.length})
-          </h2>
-          <p className="mb-2 text-xs text-gray-400">
-            Heuristic arrest-DOC bridge matches — candidate links, not ground truth
-          </p>
-          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-            <table className="min-w-full divide-y divide-gray-200 text-sm">
-              <thead className="bg-gray-50">
+        <section className="drose-panel">
+          <div className="drose-section-header">
+            <div>
+              <p className="drose-kicker">Candidate Linkage</p>
+              <h2 className="drose-section-title">
+                Linked Arrests ({bridge.length})
+              </h2>
+              <p className="drose-note">
+                Heuristic arrest-DOC bridge matches. These are candidate links,
+                not ground truth.
+              </p>
+            </div>
+          </div>
+          <div className="drose-table-wrap">
+            <table className="drose-table">
+              <thead>
                 <tr>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Date</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Boro</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Precinct</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Charge</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Category</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Race</th>
-                  <th className="px-3 py-2 text-left font-medium text-gray-500">Sex</th>
+                  <th>Date</th>
+                  <th>Boro</th>
+                  <th>Precinct</th>
+                  <th>Charge</th>
+                  <th>Category</th>
+                  <th>Race</th>
+                  <th>Sex</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 text-gray-800">
+              <tbody>
                 {bridge.map((b) => (
-                  <tr key={b.ARREST_KEY} className="hover:bg-blue-50">
-                    <td className="px-3 py-2 font-mono">{formatDate(b.arrest_date)}</td>
-                    <td className="px-3 py-2">{b.arrest_boro ?? "—"}</td>
-                    <td className="px-3 py-2">{b.arrest_precinct ?? "—"}</td>
-                    <td className="px-3 py-2">{chargeLabel(b.penal_code)}</td>
-                    <td className="px-3 py-2">{b.law_category ?? "—"}</td>
-                    <td className="px-3 py-2">{b.arrest_race ?? "—"}</td>
-                    <td className="px-3 py-2">{b.arrest_sex ?? "—"}</td>
+                  <tr key={b.ARREST_KEY}>
+                    <td className="drose-mono">{formatDate(b.arrest_date)}</td>
+                    <td>{b.arrest_boro ?? "—"}</td>
+                    <td>{b.arrest_precinct ?? "—"}</td>
+                    <td>{chargeLabel(b.penal_code)}</td>
+                    <td>{b.law_category ?? "—"}</td>
+                    <td>{b.arrest_race ?? "—"}</td>
+                    <td>{b.arrest_sex ?? "—"}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
       )}
     </div>
   );
