@@ -21,6 +21,20 @@ bun run lint
 bun run build
 ```
 
+For container deploys, the web app only needs these four files:
+
+- `doc_recidivism_persons.parquet`
+- `doc_recidivism_episodes.parquet`
+- `doc_cohort_recidivism.parquet`
+- `arrest_doc_bridge.parquet`
+
+Mount them into the container and set `CRIMS_DATA_DIR` to that directory. The
+bundled Docker image defaults to `/data/derived` and exposes `GET /health`.
+
+For a subdirectory deploy such as `drose.io/nyc-crime`, set
+`NEXT_PUBLIC_BASE_PATH=/nyc-crime` at build time and runtime. Public asset URLs
+and the healthcheck follow that base path.
+
 The app expects derived data under `../data/derived` relative to `web/`.
 Generate or refresh those artifacts from the repo root before debugging empty
 screens:
