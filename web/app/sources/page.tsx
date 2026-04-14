@@ -38,7 +38,7 @@ export default async function SourcesPage() {
         </div>
       </section>
 
-      <section className="drose-panel">
+      <section className="drose-copy-section">
         <div className="drose-section-header">
           <div>
             <p className="drose-kicker">Current Web App Inputs</p>
@@ -79,8 +79,8 @@ export default async function SourcesPage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <div className="drose-panel">
+      <section className="drose-copy-grid">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Current App Outputs</p>
@@ -111,7 +111,7 @@ export default async function SourcesPage() {
           </div>
         </div>
 
-        <div className="drose-panel">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Repo Panel Inputs</p>
@@ -155,7 +155,7 @@ export default async function SourcesPage() {
         </div>
       </section>
 
-      <section className="drose-panel">
+      <section className="drose-copy-section">
         <div className="drose-section-header">
           <div>
             <p className="drose-kicker">Join Surfaces</p>
@@ -195,7 +195,7 @@ export default async function SourcesPage() {
         </div>
       </section>
 
-      <section className="drose-panel">
+      <section className="drose-copy-section">
         <div className="drose-section-header">
           <div>
             <p className="drose-kicker">Documented Inventory</p>

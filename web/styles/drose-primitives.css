@@ -102,16 +102,14 @@
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 24px;
+  gap: 40px;
 }
 
 .drose-hero {
   position: relative;
-  overflow: hidden;
-  padding: 24px;
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #141821;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .drose-hero::before {
@@ -119,8 +117,8 @@
 }
 
 .drose-hero-compact {
-  padding-top: 26px;
-  padding-bottom: 26px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .drose-hero > * {
@@ -146,31 +144,29 @@
 }
 
 .drose-lead {
-  max-width: 760px;
+  max-width: 72ch;
   margin: 12px 0 0;
   color: var(--drose-text-secondary);
-  font-size: 15px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.75;
 }
 
 .drose-metric-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 6px 18px;
   margin-top: 18px;
+  max-width: 72ch;
 }
 
 .drose-metric-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.03);
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--drose-text-secondary);
-  font-size: 13px;
-  line-height: 1.35;
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 .drose-metric-chip strong {
@@ -281,8 +277,8 @@
 .drose-section-title {
   margin: 0;
   color: var(--drose-text);
-  font-size: 22px;
-  line-height: 1.15;
+  font-size: 24px;
+  line-height: 1.2;
   font-weight: 700;
 }
 
@@ -299,8 +295,8 @@
 .drose-note {
   margin: 8px 0 0;
   color: var(--drose-text-muted);
-  font-size: 13px;
-  line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.75;
 }
 
 .drose-note {
@@ -325,24 +321,19 @@
 .drose-stat-grid {
   display: grid;
   grid-template-columns: repeat(1, minmax(0, 1fr));
-  gap: 14px;
+  gap: 20px;
 }
 
 .drose-stat-card {
   position: relative;
-  padding: 18px 18px 16px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.drose-stat-card::before {
-  display: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
 }
 
 .drose-stat-value {
   color: var(--drose-text);
-  font-size: clamp(1.8rem, 2vw, 2.2rem);
+  font-size: clamp(1.55rem, 1.8vw, 1.9rem);
   line-height: 1;
   font-weight: 700;
 }
@@ -350,17 +341,15 @@
 .drose-stat-label {
   margin-top: 6px;
   color: var(--drose-text-secondary);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .drose-stat-detail {
   margin-top: 8px;
   color: var(--drose-text-muted);
-  font-size: 12px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
 .drose-table-wrap {
@@ -521,40 +510,29 @@
 }
 
 .drose-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 10px;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  font-size: 11px;
-  font-weight: 700;
+  display: inline;
+  padding: 0;
+  border: 0;
+  font-size: 12px;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .drose-badge-single {
-  background: rgba(255, 255, 255, 0.08);
   color: var(--drose-text-secondary);
-  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .drose-badge-low-repeat {
-  background: rgba(6, 182, 212, 0.12);
   color: #8be6f5;
-  border-color: rgba(6, 182, 212, 0.2);
 }
 
 .drose-badge-moderate-repeat {
-  background: rgba(245, 158, 11, 0.14);
   color: #fcd68a;
-  border-color: rgba(245, 158, 11, 0.22);
 }
 
 .drose-badge-high-repeat {
-  background: rgba(251, 113, 133, 0.14);
   color: #fecdd3;
-  border-color: rgba(251, 113, 133, 0.22);
 }
 
 .drose-empty-state {
@@ -593,16 +571,64 @@
 .drose-doc-item-copy {
   margin: 8px 0 0;
   color: var(--drose-text-muted);
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.75;
 }
 
 .drose-doc-meta {
   margin-top: 8px;
   color: var(--drose-text-secondary);
-  font-size: 12px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.drose-copy-grid {
+  display: grid;
+  gap: 32px;
+}
+
+.drose-copy-section {
+  max-width: 72ch;
+}
+
+.drose-copy-section .drose-section-header {
+  margin-bottom: 12px;
+}
+
+.drose-build-list {
+  display: grid;
+  gap: 18px;
+}
+
+.drose-build-step {
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.drose-build-step:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.drose-build-script {
+  margin: 0;
+  font-family: var(--drose-font-mono);
+  font-size: 13px;
+  color: var(--drose-text);
+}
+
+.drose-build-copy {
+  margin: 6px 0 0;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--drose-text-muted);
+}
+
+.drose-build-meta {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--drose-text-secondary);
 }
 
 .drose-skeleton {
@@ -641,6 +667,10 @@
   .drose-stat-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .drose-copy-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 900px) {
@@ -664,7 +694,6 @@
     padding: 22px 18px;
   }
 
-  .drose-hero,
   .drose-panel {
     padding: 18px;
   }
@@ -687,7 +716,6 @@
     flex-direction: column;
   }
 
-  .drose-metric-chip,
   .drose-button,
   .drose-nav-link {
     width: 100%;

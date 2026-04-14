@@ -58,8 +58,8 @@ export default async function MethodologyPage() {
         />
       </div>
 
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="drose-panel">
+      <section className="drose-copy-grid">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Truth Standard</p>
@@ -108,7 +108,7 @@ export default async function MethodologyPage() {
           </div>
         </div>
 
-        <div className="drose-panel">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Current Runtime</p>
@@ -140,7 +140,7 @@ export default async function MethodologyPage() {
         </div>
       </section>
 
-      <section className="drose-panel">
+      <section className="drose-copy-section">
         <div className="drose-section-header">
           <div>
             <p className="drose-kicker">Build Chain</p>
@@ -151,24 +151,18 @@ export default async function MethodologyPage() {
             </p>
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="drose-build-list">
           {BUILD_STEPS.map((step) => (
-            <div key={step.script} className="drose-panel">
-              <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
-                {step.script}
-              </p>
-              <p className="mt-2 text-sm leading-7 text-[var(--drose-text-muted)]">
-                {step.purpose}
-              </p>
-              <p className="mt-3 text-xs uppercase tracking-[0.12em] text-[var(--drose-text-secondary)]">
-                Outputs: {step.outputs}
-              </p>
+            <div key={step.script} className="drose-build-step">
+              <p className="drose-build-script">{step.script}</p>
+              <p className="drose-build-copy">{step.purpose}</p>
+              <p className="drose-build-meta">Outputs: {step.outputs}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="drose-panel">
+      <section className="drose-copy-section">
         <div className="drose-section-header">
           <div>
             <p className="drose-kicker">Join Quality</p>
@@ -208,8 +202,8 @@ export default async function MethodologyPage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_1fr]">
-        <div className="drose-panel">
+      <section className="drose-copy-grid">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Bridge Method</p>
@@ -220,7 +214,7 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <ol className="m-0 space-y-3 pl-5 text-sm leading-7 text-[var(--drose-text-muted)]">
+          <ol className="m-0 space-y-3 pl-5 text-[15px] leading-7 text-[var(--drose-text-muted)]">
             <li>Parse NYPD <code>LAW_CODE</code> into a penal-law format that can match DOC <code>TOP_CHARGE</code>.</li>
             <li>Require the arrest date to equal the DOC admission date.</li>
             <li>Require normalized sex to agree across systems.</li>
@@ -235,7 +229,7 @@ export default async function MethodologyPage() {
           </p>
         </div>
 
-        <div className="drose-panel">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Non-Claims</p>
@@ -246,7 +240,7 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <ul className="m-0 space-y-3 pl-5 text-sm leading-7 text-[var(--drose-text-muted)]">
+          <ul className="m-0 space-y-3 pl-5 text-[15px] leading-7 text-[var(--drose-text-muted)]">
             {NON_CLAIMS.map((item) => (
               <li key={item}>{item}</li>
             ))}
@@ -254,8 +248,8 @@ export default async function MethodologyPage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_1fr]">
-        <div className="drose-panel">
+      <section className="drose-copy-grid">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Broader Repo Outputs</p>
@@ -283,7 +277,7 @@ export default async function MethodologyPage() {
           </div>
         </div>
 
-        <div className="drose-panel">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Live Build Notes</p>
@@ -294,7 +288,7 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <div className="space-y-3 text-sm leading-7 text-[var(--drose-text-muted)]">
+          <div className="space-y-3 text-[15px] leading-7 text-[var(--drose-text-muted)]">
             <p className="m-0">
               Exact DOC layer: {formatNumber(stats.uniquePeople)} people,{` `}
               {formatNumber(stats.jailEpisodes)} jail episodes, max{` `}

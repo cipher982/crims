@@ -70,8 +70,8 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
-        <div className="drose-panel">
+      <section className="drose-copy-grid">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">How To Read This Explorer</p>
@@ -119,7 +119,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <div className="drose-panel">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Methods + Sources</p>
@@ -131,7 +131,7 @@ export default async function Home() {
               </p>
             </div>
           </div>
-          <div className="space-y-3 text-sm leading-7 text-[var(--drose-text-muted)]">
+          <div className="space-y-3 text-[15px] leading-7 text-[var(--drose-text-muted)]">
             <p className="m-0">
               Core runtime inputs: DOC admissions, DOC discharges, DOC cohort
               outcomes, and the candidate arrest-DOC bridge.
@@ -224,8 +224,8 @@ export default async function Home() {
         </div>
       </section>
 
-      <section className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div className="drose-panel">
+      <section className="drose-copy-grid">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Scope</p>
@@ -239,7 +239,7 @@ export default async function Home() {
             matches.
           </p>
         </div>
-        <div className="drose-panel">
+        <div className="drose-copy-section">
           <div className="drose-section-header">
             <div>
               <p className="drose-kicker">Limits</p>
