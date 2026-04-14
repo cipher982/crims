@@ -66,16 +66,19 @@ The current visual system is intentionally split into an extraction boundary so
 the `drose.io` look can be reused elsewhere without another large refactor.
 
 - `styles/drose-theme.css`
-  - token layer derived from the live `drose.io` palette and background system
-  - fonts, colors, shell sizing, motion, shadows, grid/nebula/particle layers
+  - generated theme shell used by the app
+  - imports shared token definitions plus the dark/void background system
+- `styles/drose-core-tokens.css`
+  - generated shared token layer
+  - fonts, colors, shell sizing, motion, spacing, and shadow variables
 - `styles/drose-primitives.css`
-  - reusable surface primitives used by the app shell and pages
+  - generated reusable surface primitives used by the app shell and pages
   - nav, hero, glass panel, stat card, button, form control, badge, and table
     treatments
 
-The goal is to keep these files token-first and primitive-first so they can be
-lifted into a separate shared package once the contract stabilizes. For now the
-shared API is the CSS classes and variables, not a React component library.
+These files are consumer copies of an external shared source-of-truth. Treat the
+CSS classes and variables as the public API, but avoid hand-editing generated
+copies unless you are intentionally breaking away from the shared theme.
 
 ## Stack
 
