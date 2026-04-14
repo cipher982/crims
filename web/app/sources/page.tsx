@@ -91,22 +91,19 @@ export default async function SourcesPage() {
               </p>
             </div>
           </div>
-          <div className="space-y-3">
+          <div className="drose-doc-list">
             {CURRENT_APP_DATASETS.map((dataset) => (
-              <div
-                key={dataset.name}
-                className="rounded-2xl border border-white/8 bg-white/4 p-4"
-              >
-                <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
+              <div key={dataset.name} className="drose-doc-item">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
                     {dataset.name}
                   </p>
                   <MethodBadge status={dataset.confidence} />
                 </div>
-                <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                <p className="drose-doc-item-copy">
                   {dataset.method}
                 </p>
-                <p className="mt-2 text-xs uppercase tracking-[0.12em] text-[var(--drose-text-secondary)]">
+                <p className="drose-doc-meta">
                   Built by {dataset.builtBy}
                 </p>
               </div>

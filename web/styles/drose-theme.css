@@ -17,111 +17,21 @@ body {
   min-height: 100%;
   margin: 0;
   position: relative;
-  background-color: var(--drose-void);
+  background-color: #0f1117;
   color: var(--drose-text);
   font-family: var(--drose-font-sans);
 }
 
 body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(99, 102, 241, 0.18) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(99, 102, 241, 0.18) 1px, transparent 1px);
-  background-size: 60px 60px;
-  mask-image: radial-gradient(ellipse at 50% 30%, black 0%, black 30%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 0%, black 30%, transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.8;
-  animation: drose-grid-pulse 8s ease-in-out infinite;
+  display: none;
 }
 
 body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 15% 85%, rgba(99, 102, 241, 0.32) 0%, transparent 45%),
-    radial-gradient(ellipse at 85% 15%, rgba(6, 182, 212, 0.26) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.14) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(168, 85, 247, 0.18) 0%, transparent 40%);
-  pointer-events: none;
-  z-index: 0;
-  animation: drose-nebula-drift 20s ease-in-out infinite alternate;
-}
-
-@keyframes drose-grid-pulse {
-  0%,
-  100% {
-    opacity: 0.7;
-  }
-  50% {
-    opacity: 1;
-  }
-}
-
-@keyframes drose-nebula-drift {
-  0% {
-    transform: scale(1) translate(0, 0);
-  }
-  100% {
-    transform: scale(1.08) translate(-20px, -10px);
-  }
+  display: none;
 }
 
 .drose-particle-bg {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-  --particle-drift-x: 600px;
-  --particle-drift-y: 300px;
-  --particle-overscan: 96px;
-}
-
-.drose-particle-bg::before,
-.drose-particle-bg::after {
-  content: "";
-  position: absolute;
-  top: calc(-1 * var(--particle-drift-y) - var(--particle-overscan));
-  bottom: calc(-1 * var(--particle-drift-y) - var(--particle-overscan));
-  left: calc(-1 * var(--particle-drift-x) - var(--particle-overscan));
-  right: calc(-1 * var(--particle-drift-x) - var(--particle-overscan));
-  background-repeat: repeat;
-  transform: translate3d(0, 0, 0);
-  will-change: transform;
-  animation: drose-particle-drift 80s linear infinite;
-}
-
-.drose-particle-bg::before {
-  background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 50%),
-    radial-gradient(circle at 30% 70%, rgba(99, 102, 241, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 70% 30%, rgba(6, 182, 212, 0.1) 0%, transparent 40%);
-  background-size: 2px 2px, 400px 400px, 500px 500px;
-  opacity: 0.9;
-}
-
-.drose-particle-bg::after {
-  background-image:
-    radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 60% 40%, rgba(236, 72, 153, 0.08) 0%, transparent 35%);
-  background-size: 3px 3px, 600px 600px;
-  opacity: 0.7;
-  animation-duration: 120s;
-  animation-direction: reverse;
-}
-
-@keyframes drose-particle-drift {
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-    transform: translate3d(var(--particle-drift-x), var(--particle-drift-y), 0);
-  }
+  display: none;
 }
 
 ::selection {

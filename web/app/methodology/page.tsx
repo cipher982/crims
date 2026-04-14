@@ -71,32 +71,35 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <div className="grid gap-3">
-            <div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/6 p-4">
-              <div className="mb-2">
+          <div className="drose-doc-list">
+            <div className="drose-doc-item">
+              <p className="drose-doc-item-title">
                 <MethodBadge status="exact" />
-              </div>
-              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Exact
+              </p>
+              <p className="drose-doc-item-copy">
                 DOC admissions and discharges join on <code>INMATEID + admit_date</code>,
                 which supports exact jail episode histories, repeat-admission
                 counts, and cohort return metrics.
               </p>
             </div>
-            <div className="rounded-2xl border border-amber-400/15 bg-amber-400/6 p-4">
-              <div className="mb-2">
+            <div className="drose-doc-item">
+              <p className="drose-doc-item-title">
                 <MethodBadge status="candidate" />
-              </div>
-              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Candidate
+              </p>
+              <p className="drose-doc-item-copy">
                 The arrest bridge keeps only unique 1:1 matches after filtering
                 on same date, normalized sex, parsed penal code, and compatible
                 age bucket.
               </p>
             </div>
-            <div className="rounded-2xl border border-rose-400/15 bg-rose-400/6 p-4">
-              <div className="mb-2">
+            <div className="drose-doc-item">
+              <p className="drose-doc-item-title">
                 <MethodBadge status="unsupported" />
-              </div>
-              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Unsupported
+              </p>
+              <p className="drose-doc-item-copy">
                 Public court bulk extracts are de-identified and public prison
                 releases are aggregate, so this site does not claim full
                 cross-stage identity resolution.
@@ -116,22 +119,19 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <div className="space-y-3">
+          <div className="drose-doc-list">
             {CURRENT_APP_DATASETS.map((dataset) => (
-              <div
-                key={dataset.name}
-                className="rounded-2xl border border-white/8 bg-white/4 p-4"
-              >
-                <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
+              <div key={dataset.name} className="drose-doc-item">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
                     {dataset.name}
                   </p>
                   <MethodBadge status={dataset.confidence} />
                 </div>
-                <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                <p className="drose-doc-item-copy">
                   {dataset.method}
                 </p>
-                <p className="mt-2 text-xs uppercase tracking-[0.12em] text-[var(--drose-text-secondary)]">
+                <p className="drose-doc-meta">
                   {dataset.grain} · {dataset.usedFor}
                 </p>
               </div>
@@ -153,10 +153,7 @@ export default async function MethodologyPage() {
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           {BUILD_STEPS.map((step) => (
-            <div
-              key={step.script}
-              className="rounded-2xl border border-white/8 bg-white/4 p-4"
-            >
+            <div key={step.script} className="drose-panel">
               <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
                 {step.script}
               </p>
@@ -269,19 +266,16 @@ export default async function MethodologyPage() {
               </p>
             </div>
           </div>
-          <div className="space-y-3">
+          <div className="drose-doc-list">
             {BROADER_REPO_DATASETS.map((dataset) => (
-              <div
-                key={dataset.name}
-                className="rounded-2xl border border-white/8 bg-white/4 p-4"
-              >
-                <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
+              <div key={dataset.name} className="drose-doc-item">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <p className="m-0 font-mono text-sm text-[var(--drose-text)]">
                     {dataset.name}
                   </p>
                   <MethodBadge status={dataset.confidence} />
                 </div>
-                <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                <p className="drose-doc-item-copy">
                   {dataset.method}
                 </p>
               </div>

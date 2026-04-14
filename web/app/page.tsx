@@ -83,31 +83,34 @@ export default async function Home() {
               </p>
             </div>
           </div>
-          <div className="space-y-3">
-            <div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/6 p-4">
-              <div className="mb-2">
+          <div className="drose-doc-list">
+            <div className="drose-doc-item">
+              <p className="drose-doc-item-title">
                 <MethodBadge status="exact" />
-              </div>
-              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Exact DOC histories
+              </p>
+              <p className="drose-doc-item-copy">
                 DOC person pages, episode counts, stay lengths, gap lengths, and
                 cohort return rates all come from exact joins inside the public
                 DOC feeds.
               </p>
             </div>
-            <div className="rounded-2xl border border-amber-400/15 bg-amber-400/6 p-4">
-              <div className="mb-2">
+            <div className="drose-doc-item">
+              <p className="drose-doc-item-title">
                 <MethodBadge status="candidate" />
-              </div>
-              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Candidate arrest context
+              </p>
+              <p className="drose-doc-item-copy">
                 Arrest rows and map points are candidate matches only. They come
                 from a strict 1:1 bridge, not a full cross-system person key.
               </p>
             </div>
-            <div className="rounded-2xl border border-rose-400/15 bg-rose-400/6 p-4">
-              <div className="mb-2">
+            <div className="drose-doc-item">
+              <p className="drose-doc-item-title">
                 <MethodBadge status="unsupported" />
-              </div>
-              <p className="m-0 text-sm leading-7 text-[var(--drose-text-muted)]">
+                Unsupported claims
+              </p>
+              <p className="drose-doc-item-copy">
                 Court outcomes, prison histories, parole, and citywide
                 multi-arrest identity resolution remain outside what public bulk
                 data can support here.
