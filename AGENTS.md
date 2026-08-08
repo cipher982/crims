@@ -65,6 +65,8 @@ DOC discharge `AGE` + discharge date → approximate birth year (±1-2 years). T
 
 DOC race is useless for cross-source joins — only 3 values (BLACK, UNKNOWN, ASIAN) vs NYPD's 7 categories, with 43% UNKNOWN. DOC has no borough, no coordinates, no age on admissions.
 
+**Open lead, not yet explored:** DCJS Supplemental Pretrial's `arr_agency_name` carries NYPD precinct codes on 420K NYC rows (see SOURCES.md). It is the most promising unexplored join surface into arrest data.
+
 ### What Recidivism Tracking Requires
 
 | Goal | Feasible now? | Size |
@@ -139,6 +141,27 @@ Geocoding deduplicates unique coordinate pairs, caches in `data/meta/`, joins ba
 - Summonses have lower demographic coverage (~74% race, ~94% sex)
 - YTD NYC Open Data feeds have historically lagged by a year
 
+## Validation Against Published Benchmarks
+
+Checked 2026-04-13 against published NYC DOC reports and BJS national stats. Three
+apparent discrepancies are measurement artifacts, not errors in our numbers.
+
+- **Race is a 3-value encoding, and UNKNOWN is not "missing".** Open data gives
+  BLACK / UNKNOWN / ASIAN with ~45% UNKNOWN; published DOC reports give ~56% Black,
+  ~31% Hispanic, ~6% White, ~2% Asian. The UNKNOWN bucket is mostly Hispanic and
+  White. Do not report open-data race shares as demographics.
+- **Sex split 89% male vs published ~95%.** We count unique people; published
+  figures are average daily population, which is length-biased toward people who
+  stay longer. Both are right for their own question.
+- **Median stay ~12 days vs published "280-340 day average LOS".** Same artifact:
+  episode-level median against a snapshot population dominated by long-stayers.
+  This is not a data error and does not need explaining away.
+- **Repeat rate ~44% is plausible** against BJS national ~43-44% rearrest, though
+  the two measure different events (ever-return-to-DOC vs rearrest).
+
+No published work was found doing person-level DOC recidivism via `INMATEID`, so
+this may be a novel use of the public data.
+
 ## Conventions
 
 - Separate exact, candidate, and unsupported joins explicitly in code and output columns.
@@ -154,3 +177,8 @@ Geocoding deduplicates unique coordinate pairs, caches in `data/meta/`, joins ba
 | **Always** | Inspect schema and sample rows before broad transforms; preserve raw copies; note quality issues |
 | **Ask first** | Broad dependency additions, major restructuring, sending requests to nonpublic endpoints |
 | **Never** | Fabricate joins, imply fuzzy matches are ground truth, overwrite raw downloads, create doc sprawl |
+
+Direction matters for fuzzy matching: it may enrich a single person's record (the
+arrest-DOC bridge), but it may never draw an edge between two people. A
+person-to-person link needs a shared identifier (`INMATEID`, `arr_cycle_id`, a
+court docket). "Same day, same charge" is not a relationship.
