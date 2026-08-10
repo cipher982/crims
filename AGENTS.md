@@ -1,10 +1,10 @@
 # crims
 
-Research workspace for assembling the best possible public NYC criminal-justice dataset. The end goal is tracking recidivism and multi-arrest patterns over time. The current focus is exhausting the public data path before pursuing restricted-data agreements.
+Research workspace assembling the best possible public NYC criminal-justice dataset to track recidivism and multi-arrest patterns over time. Current focus: exhaust the public data path before pursuing restricted-data agreements.
 
 ## The Problem
 
-Public NYC bulk data gives us **event records**, not named people. There is no shared person identifier across criminal justice stages. The project treats this as an **event graph** and labels every linkage as exact, candidate, or unsupported.
+Public NYC bulk data is **event records**, not named people — no shared person identifier exists across criminal justice stages. Treat data as an **event graph**, labeling every linkage exact, candidate, or unsupported.
 
 ### NYC Criminal Justice Pipeline — What Exists as Data
 
@@ -29,9 +29,7 @@ COMPLAINT ──> ARREST ──> ARRAIGNMENT ──> INDICTMENT/TRIAL ──> CO
 
 ### Identifier Ceiling
 
-Public data exposes event IDs and demographic buckets (race, sex, age group). It does **not** expose names, DOB, addresses, or a cross-stage person key.
-
-The identifiers that *would* make end-to-end linkage work are restricted:
+Public data exposes event IDs and demographic buckets (race, sex, age group) — not names, DOB, addresses, or a cross-stage person key. End-to-end linkage needs restricted identifiers:
 
 | Identifier | What | Who has it | Public? |
 |------------|------|------------|---------|
@@ -41,31 +39,21 @@ The identifiers that *would* make end-to-end linkage work are restricted:
 | **INMATEID** | NYC DOC jail person ID | NYC DOC | **Yes** — the one we have |
 | **DIN** | State prison person ID | DOCCS | Lookup only |
 
-Key fact from Vera Institute research: NYC DOC does not record CJTN or arrest dates, so even researchers with restricted access had to match DOC to arrests by date logic.
+Key (Vera Institute): NYC DOC records neither CJTN nor arrest dates, so even researchers with restricted access matched DOC to arrests by date logic.
 
 ### Current Join Quality
 
-**DOC admissions ↔ discharges** — exact on `INMATEID`, strong. 97.7% match rate.
-
-**Arrests ↔ complaints** — heuristic on date + precinct + offense code + borough, filtered by demographics. Results across 2.76M arrests (2014-2024):
-- 34% unique match (good signal)
-- 24% ambiguous (multiple complaints match)
-- 34% no match
-- Linkage quality is worse 2014-2017, better 2020-2024
-
-**Arrests ↔ DOC admissions** — heuristic on date + sex + penal code + imputed age group. Current derived output: 12.4K unique matches (one admission to exactly one arrest). Covers 11.4K unique people, of which 904 have 2+ linked arrest-to-jail episodes. Narrow but clean — usable as a candidate bridge.
-
-**Everything else** — not connected. No court outcomes, no cross-arrest person tracking.
+- **DOC admissions ↔ discharges** — exact on `INMATEID`, 97.7% match.
+- **Arrests ↔ complaints** — heuristic: date + precinct + offense code + borough, demographically filtered. 2.76M arrests (2014-2024): 34% unique match, 24% ambiguous, 34% no match. Worse 2014-2017, better 2020-2024.
+- **Arrests ↔ DOC admissions** — heuristic: date + sex + penal code + imputed age group. 12.4K unique matches (one admission ↔ one arrest), 11.4K unique people, 904 with 2+ arrest-to-jail episodes. Narrow but clean — usable candidate bridge.
+- **Everything else** — not connected. No court outcomes, no cross-arrest person tracking.
 
 ### Cross-Source Join Surfaces
 
-NYPD `LAW_CODE` (e.g. `PL 1552500`) can be parsed into penal law codes matching DOC `TOP_CHARGE` (e.g. `155.25`). Format: `PL XXXYYZZZ` → `XXX.YY`. 344 charges overlap. DOC `TOP_CHARGE` is only 38% non-null.
-
-DOC discharge `AGE` + discharge date → approximate birth year (±1-2 years). This can be imputed back to admissions to compute expected NYPD age bucket at time of admission. Useful for tightening heuristic joins.
-
-DOC race is useless for cross-source joins — only 3 values (BLACK, UNKNOWN, ASIAN) vs NYPD's 7 categories, with 43% UNKNOWN. DOC has no borough, no coordinates, no age on admissions.
-
-**Open lead, not yet explored:** DCJS Supplemental Pretrial's `arr_agency_name` carries NYPD precinct codes on 420K NYC rows (see SOURCES.md). It is the most promising unexplored join surface into arrest data.
+- NYPD `LAW_CODE` (`PL 1552500`) parses to penal code matching DOC `TOP_CHARGE` (`155.25`): format `PL XXXYYZZZ` → `XXX.YY`. 344 overlapping charges. DOC `TOP_CHARGE` only 38% non-null.
+- DOC discharge `AGE` + discharge date → approximate birth year (±1-2 yr), imputable back to admissions for NYPD age bucket at admission. Tightens heuristic joins.
+- DOC race useless cross-source: 3 values (BLACK, UNKNOWN, ASIAN) vs NYPD's 7, 43% UNKNOWN. No borough, no coordinates, no age on admissions.
+- **Open lead, unexplored:** DCJS Supplemental Pretrial `arr_agency_name` carries NYPD precinct codes on 420K NYC rows (SOURCES.md). Most promising join surface into arrest data.
 
 ### What Recidivism Tracking Requires
 
@@ -112,7 +100,7 @@ Most build scripts accept `--year` or `--start-year / --end-year`. Add `--write-
 | `data/meta/` | Inventory JSON, profile JSON, coordinate cache (git-ignored) |
 | `SOURCES.md` | Data source inventory with slugs, keys, joinability, and access notes |
 
-The canonical research table is the multi-year census-enriched panel in `data/derived/`. Profile JSON in `data/meta/` has per-year coverage and quality signals.
+The canonical research table is the multi-year census-enriched panel in `data/derived/`. Profile JSON in `data/meta/` holds per-year coverage and quality signals.
 
 ## Architecture
 
@@ -122,7 +110,7 @@ raw CSV  -->  Polars lazy scan + clean + join  -->  Parquet (derived/)
                                                optional CSV export
 ```
 
-Geocoding deduplicates unique coordinate pairs, caches in `data/meta/`, joins back. Avoids redundant Census API calls.
+Geocoding deduplicates unique coordinate pairs, caches in `data/meta/`, joins back — avoids redundant Census API calls.
 
 ## Current Panel Stats (2014-2024)
 
@@ -135,32 +123,22 @@ Geocoding deduplicates unique coordinate pairs, caches in `data/meta/`, joins ba
 
 ## Known Data Quality Issues
 
-- DOC race categories (BLACK/UNKNOWN/ASIAN) don't map cleanly to NYPD categories (7 values). 43% DOC is UNKNOWN. Not useful for cross-source joins.
-- DOC admissions have no age, no borough, no coordinates. `TOP_CHARGE` is only 38% non-null.
-- Complaints `susp_age_group` is almost entirely standard buckets — only 279 out of 5.3M have raw integer ages (effectively zero, despite the panel showing 239 distinct `AGE_BUCKET` values from dirty data)
-- Summonses have lower demographic coverage (~74% race, ~94% sex)
-- YTD NYC Open Data feeds have historically lagged by a year
+- DOC race (BLACK/UNKNOWN/ASIAN) doesn't map cleanly to NYPD's 7 values; 43% UNKNOWN. Not useful for cross-source joins.
+- DOC admissions have no age, no borough, no coordinates. `TOP_CHARGE` only 38% non-null.
+- Complaints `susp_age_group` is almost entirely standard buckets — only 279 of 5.3M have raw integer ages (effectively zero, despite the panel showing 239 distinct `AGE_BUCKET` values from dirty data).
+- Summonses lower demographic coverage (~74% race, ~94% sex).
+- YTD NYC Open Data feeds have historically lagged by a year.
 
 ## Validation Against Published Benchmarks
 
-Checked 2026-04-13 against published NYC DOC reports and BJS national stats. Three
-apparent discrepancies are measurement artifacts, not errors in our numbers.
+Checked 2026-04-13 against published NYC DOC reports and BJS national stats. Four apparent discrepancies are measurement artifacts, not errors.
 
-- **Race is a 3-value encoding, and UNKNOWN is not "missing".** Open data gives
-  BLACK / UNKNOWN / ASIAN with ~45% UNKNOWN; published DOC reports give ~56% Black,
-  ~31% Hispanic, ~6% White, ~2% Asian. The UNKNOWN bucket is mostly Hispanic and
-  White. Do not report open-data race shares as demographics.
-- **Sex split 89% male vs published ~95%.** We count unique people; published
-  figures are average daily population, which is length-biased toward people who
-  stay longer. Both are right for their own question.
-- **Median stay ~12 days vs published "280-340 day average LOS".** Same artifact:
-  episode-level median against a snapshot population dominated by long-stayers.
-  This is not a data error and does not need explaining away.
-- **Repeat rate ~44% is plausible** against BJS national ~43-44% rearrest, though
-  the two measure different events (ever-return-to-DOC vs rearrest).
+- **Race is a 3-value encoding, and UNKNOWN is not "missing".** Open data gives BLACK/UNKNOWN/ASIAN with ~45% UNKNOWN; published reports give ~56% Black, ~31% Hispanic, ~6% White, ~2% Asian. UNKNOWN is mostly Hispanic and White. Do not report open-data race shares as demographics.
+- **Sex split 89% male vs published ~95%.** We count unique people; published figures are average daily population, length-biased toward longer stays. Both are right.
+- **Median stay ~12 days vs published "280-340 day average LOS".** Same artifact: episode-level median vs a snapshot population dominated by long-stayers. Not a data error.
+- **Repeat rate ~44% is plausible** against BJS national ~43-44% rearrest, though the two measure different events (ever-return-to-DOC vs rearrest).
 
-No published work was found doing person-level DOC recidivism via `INMATEID`, so
-this may be a novel use of the public data.
+No published work found doing person-level DOC recidivism via `INMATEID` — possibly a novel use of the public data.
 
 ## Conventions
 
@@ -178,7 +156,4 @@ this may be a novel use of the public data.
 | **Ask first** | Broad dependency additions, major restructuring, sending requests to nonpublic endpoints |
 | **Never** | Fabricate joins, imply fuzzy matches are ground truth, overwrite raw downloads, create doc sprawl |
 
-Direction matters for fuzzy matching: it may enrich a single person's record (the
-arrest-DOC bridge), but it may never draw an edge between two people. A
-person-to-person link needs a shared identifier (`INMATEID`, `arr_cycle_id`, a
-court docket). "Same day, same charge" is not a relationship.
+Direction matters for fuzzy matching: it may enrich a single person's record (the arrest-DOC bridge), but it may never draw an edge between two people. A person-to-person link needs a shared identifier (`INMATEID`, `arr_cycle_id`, a court docket). "Same day, same charge" is not a relationship.
